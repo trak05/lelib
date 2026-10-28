@@ -7,6 +7,23 @@ Ma bibliothèque d'extensions Claude Code (skills, agents, commandes, hooks, ser
 | Plugin | Contenu |
 |---|---|
 | `lelib-core` | skill `/ticket`, skill `hello-lelib`, agent `relecteur`, commande `/resume-session`, hook météo à l'ouverture de session, hook de journalisation des éditions (`~/.claude/lelib-edits.log`), serveur MCP `lelib-tools` (`ping`, `date_fr`) |
+| `lelib-equipe` | agents `po`, `dev-front`, `dev-back`, `qa`, `techlead-front`, `techlead-back`, `dba` |
+
+### L'équipe (lelib-equipe)
+
+| Agent | Rôle | Modifie |
+|---|---|---|
+| `po` | clarifie le besoin, rédige tickets et critères d'acceptation | `tickets/` uniquement |
+| `techlead-back` | conçoit et relit le back Spring Boot | rien (lecture seule) |
+| `techlead-front` | conçoit et relit le front Angular | rien (lecture seule) |
+| `dev-back` | implémente le back et ses tests | code back |
+| `dev-front` | implémente le front et ses tests | code front |
+| `dba` | schéma, migrations, performance PostgreSQL | migrations, entités |
+| `qa` | vérifie les critères d'acceptation, cherche les cas limites | tests uniquement |
+
+Exemple de chaîne : `/ticket` → `po` affine → `techlead-back` / `techlead-front` conçoivent → `dba` si le schéma change → `dev-back` / `dev-front` codent → `qa` vérifie → tech leads relisent.
+
+On les appelle en langage naturel : « demande au techlead-back de relire ce controller », « fais vérifier bet-001 par le qa ».
 
 ### /ticket
 

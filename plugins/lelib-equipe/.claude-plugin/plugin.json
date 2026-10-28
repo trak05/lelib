@@ -1,0 +1,8 @@
+{
+  "name": "lelib-equipe",
+  "version": "0.1.0",
+  "description": "Équipe d'agents pour projets Spring Boot / Angular : PO, dev front, dev back, QA, tech leads front et back, DBA.",
+  "author": {
+    "name": "Bilel Oueslati"
+  }
+}
