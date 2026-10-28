@@ -54,7 +54,10 @@ Pour l'installer sur n'importe quel poste, depuis un terminal `claude` :
 ```
 /plugin marketplace add trak05/lelib
 /plugin install lelib-core@lelib
+/plugin install lelib-equipe@lelib
 ```
+
+`lelib-core` et `lelib-equipe` s'installent indépendamment : n'installe que ceux dont tu as besoin.
 
 Ou, sans commande, dans `~/.claude/settings.json` (tous les projets) ou `.claude/settings.json` (un projet) :
 
@@ -63,7 +66,10 @@ Ou, sans commande, dans `~/.claude/settings.json` (tous les projets) ou `.claude
   "extraKnownMarketplaces": {
     "lelib": { "source": { "source": "github", "repo": "trak05/lelib" } }
   },
-  "enabledPlugins": { "lelib-core@lelib": true }
+  "enabledPlugins": {
+    "lelib-core@lelib": true,
+    "lelib-equipe@lelib": true
+  }
 }
 ```
 
