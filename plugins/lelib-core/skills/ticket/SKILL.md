@@ -21,7 +21,7 @@ Entrée : `$ARGUMENTS`
 1. **Racine du projet** : la racine git (`git rev-parse --show-toplevel`) si elle existe, sinon le répertoire courant.
 2. **Préfixe** : les 3 premiers caractères alphanumériques du nom du dossier racine, en minuscules.
    Exemples : `opamt` → `opa`, `beta` → `bet`, `Mon-Projet` → `mon`.
-3. **Numéro** : liste les fichiers `tickets/<préfixe>-<nombre>*.md` à la racine du projet. Prends le plus grand nombre trouvé et ajoute 1.
+3. **Numéro** : liste les fichiers `tickets/<préfixe>-<nombre>*.md` **et** `tickets/done/<préfixe>-<nombre>*.md` à la racine du projet (les tickets terminés sont rangés dans `done/`, leurs numéros restent pris). Prends le plus grand nombre trouvé et ajoute 1.
    S'il n'y en a aucun, commence à 1. Ne réutilise jamais un numéro, même s'il y a des trous.
 4. **Identifiant** : `<préfixe>-<numéro sur 3 chiffres>`, par exemple `opa-001`, `opa-012`.
 

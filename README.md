@@ -7,7 +7,7 @@ Ma bibliothèque d'extensions Claude Code (skills, agents, commandes, hooks, ser
 | Plugin | Contenu |
 |---|---|
 | `lelib-core` | skill `/ticket`, skill `hello-lelib`, agent `relecteur`, commande `/resume-session`, hook de journalisation des éditions (`~/.claude/lelib-edits.log`), serveur MCP `lelib-tools` (`ping`, `date_fr`) |
-| `lelib-equipe` | agents `po`, `dev-front`, `dev-back`, `qa`, `techlead-front`, `techlead-back`, `dba` |
+| `lelib-equipe` | skill `/dev`, agents `po`, `dev-front`, `dev-back`, `qa`, `techlead-front`, `techlead-back`, `dba` |
 | `lelib-angular` | skills `angular-setup` et `angular-ui`, vérification de compatibilité Angular / Node à l'ouverture de session |
 
 ### Angular : Bootstrap + PrimeNG (lelib-angular)
@@ -37,7 +37,19 @@ node plugins/lelib-angular/scripts/check-compat.js [dossier]
 
 Exemple de chaîne : `/ticket` → `po` affine → `techlead-back` / `techlead-front` conçoivent → `dba` si le schéma change → `dev-back` / `dev-front` codent → `qa` vérifie → tech leads relisent.
 
-On les appelle en langage naturel : « demande au techlead-back de relire ce controller », « fais vérifier bet-001 par le qa ».
+### /dev
+
+Développe des tickets avec les agents, puis range ceux qui sont terminés dans `tickets/done/` :
+
+```
+/dev 3        # le ticket numéro 3 (003 ou bet-003 marchent aussi)
+/dev          # tous les tickets de tickets/, dans l'ordre des numéros
+```
+
+Pour chaque ticket : `dba` si le schéma change, puis `dev-back`, puis `dev-front`. Le ticket n'est déplacé dans `done/` (statut `terminé`, critères cochés) que si les tests passent.
+En cas d'échec, le ticket reste dans `tickets/` avec une section `## Blocage` et `/dev` s'arrête, car les tickets suivants peuvent en dépendre. Un ticket dont les questions ouvertes bloquent le développement est sauté (sans argument) ou fait poser la question (avec un numéro). `/dev` ne fait jamais de commit.
+
+On appelle les agents en langage naturel : « demande au techlead-back de relire ce controller », « fais vérifier bet-001 par le qa ».
 
 ### /ticket
 
@@ -60,9 +72,10 @@ Pour l'installer sur n'importe quel poste, depuis un terminal `claude` :
 /plugin marketplace add trak05/lelib
 /plugin install lelib-core@lelib
 /plugin install lelib-equipe@lelib
+/plugin install lelib-angular@lelib
 ```
 
-`lelib-core` et `lelib-equipe` s'installent indépendamment : n'installe que ceux dont tu as besoin.
+`lelib-core`, `lelib-equipe` et `lelib-angular` s'installent indépendamment : n'installe que ceux dont tu as besoin.
 
 Ou, sans commande, dans `~/.claude/settings.json` (tous les projets) ou `.claude/settings.json` (un projet) :
 
@@ -73,7 +86,8 @@ Ou, sans commande, dans `~/.claude/settings.json` (tous les projets) ou `.claude
   },
   "enabledPlugins": {
     "lelib-core@lelib": true,
-    "lelib-equipe@lelib": true
+    "lelib-equipe@lelib": true,
+    "lelib-angular@lelib": true
   }
 }
 ```
