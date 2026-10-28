@@ -6,7 +6,19 @@ Ma bibliothèque d'extensions Claude Code (skills, agents, commandes, hooks, ser
 
 | Plugin | Contenu |
 |---|---|
-| `lelib-core` | skill `hello-lelib`, agent `relecteur`, commande `/resume-session`, hook météo à l'ouverture de session, hook de journalisation des éditions (`~/.claude/lelib-edits.log`), serveur MCP `lelib-tools` (`ping`, `date_fr`) |
+| `lelib-core` | skill `/ticket`, skill `hello-lelib`, agent `relecteur`, commande `/resume-session`, hook météo à l'ouverture de session, hook de journalisation des éditions (`~/.claude/lelib-edits.log`), serveur MCP `lelib-tools` (`ping`, `date_fr`) |
+
+### /ticket
+
+Crée un ticket brouillon dans le dossier `tickets/` du projet :
+
+```
+/ticket specs/export-csv.md
+/ticket Permettre l'export CSV de la liste des compteurs
+```
+
+Le ticket est nommé `<3 premières lettres du projet>-<numéro>`, par exemple `tickets/opa-001.md` pour le projet `opamt`.
+La numérotation repart du plus grand numéro existant, sans jamais en réutiliser un.
 
 ### Météo à l'ouverture
 

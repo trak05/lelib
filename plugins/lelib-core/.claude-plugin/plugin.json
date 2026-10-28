@@ -1,6 +1,6 @@
 {
   "name": "lelib-core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Plugin de base : exemples de skill, agent, commande, hook et serveur MCP.",
   "author": {
     "name": "Bilel Oueslati"
