@@ -1,0 +1,8 @@
+{
+  "name": "lelib-angular",
+  "version": "0.1.0",
+  "description": "Angular avec Bootstrap (grille et flex) et PrimeNG : installation alignée sur les versions d'Angular et de Node du projet, et conventions d'interface.",
+  "author": {
+    "name": "Bilel Oueslati"
+  }
+}

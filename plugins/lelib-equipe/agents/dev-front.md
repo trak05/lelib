@@ -1,6 +1,6 @@
 ---
 name: dev-front
-description: Développeur front-end Angular. À utiliser pour implémenter un ticket côté interface : composants, services HTTP, formulaires, routage et tests front.
+description: "Développeur front-end Angular. À utiliser pour implémenter un ticket côté interface : composants, services HTTP, formulaires, routage et tests front."
 tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

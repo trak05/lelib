@@ -16,6 +16,11 @@
       "name": "lelib-equipe",
       "source": "./plugins/lelib-equipe",
       "description": "Équipe d'agents pour projets Spring Boot / Angular : PO, dev front, dev back, QA, tech leads front et back, DBA."
+    },
+    {
+      "name": "lelib-angular",
+      "source": "./plugins/lelib-angular",
+      "description": "Angular avec Bootstrap (grille et flex) et PrimeNG : installation alignée sur les versions d'Angular et de Node du projet, et conventions d'interface."
     }
   ]
 }
