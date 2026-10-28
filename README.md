@@ -6,7 +6,7 @@ Ma bibliothèque d'extensions Claude Code (skills, agents, commandes, hooks, ser
 
 | Plugin | Contenu |
 |---|---|
-| `lelib-core` | skill `/ticket`, skill `hello-lelib`, agent `relecteur`, commande `/resume-session`, hook météo à l'ouverture de session, hook de journalisation des éditions (`~/.claude/lelib-edits.log`), serveur MCP `lelib-tools` (`ping`, `date_fr`) |
+| `lelib-core` | skill `/ticket`, skill `hello-lelib`, agent `relecteur`, commande `/resume-session`, hook de journalisation des éditions (`~/.claude/lelib-edits.log`), serveur MCP `lelib-tools` (`ping`, `date_fr`) |
 | `lelib-equipe` | agents `po`, `dev-front`, `dev-back`, `qa`, `techlead-front`, `techlead-back`, `dba` |
 
 ### L'équipe (lelib-equipe)
@@ -36,15 +36,6 @@ Crée un ticket brouillon dans le dossier `tickets/` du projet :
 
 Le ticket est nommé `<3 premières lettres du projet>-<numéro>`, par exemple `tickets/opa-001.md` pour le projet `opamt`.
 La numérotation repart du plus grand numéro existant, sans jamais en réutiliser un.
-
-### Météo à l'ouverture
-
-À chaque nouvelle session, `lelib-core` affiche la météo du jour (données [Open-Meteo](https://open-meteo.com), sans clé).
-La ville par défaut est Paris. Pour la changer, définir la variable d'environnement `LELIB_METEO_VILLE`, par exemple dans `~/.claude/settings.json` :
-
-```json
-{ "env": { "LELIB_METEO_VILLE": "Lyon" } }
-```
 
 ## Utilisation
 
