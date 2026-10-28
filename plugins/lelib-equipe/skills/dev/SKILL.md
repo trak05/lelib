@@ -1,7 +1,7 @@
 ---
 name: dev
 description: "Développe un ticket de tickets/ (ou tous les tickets en attente), puis le range dans tickets/done/. Utilisé via /dev <numéro> ou /dev seul."
-argument-hint: "[numéro de ticket]"
+argument-hint: "[numéro de ticket, optionnel : sans numéro, tous les tickets]"
 disable-model-invocation: true
 ---
 
