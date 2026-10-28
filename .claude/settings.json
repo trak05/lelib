@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "lelib": {
+      "source": {
+        "source": "directory",
+        "path": "C:\\Users\\NS6785\\OneDrive - GRDF\\Bureau\\workspace\\lelib"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "lelib-core@lelib": true
+  }
+}

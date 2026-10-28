@@ -1,0 +1,16 @@
+{
+  "name": "lelib",
+  "owner": {
+    "name": "Bilel Oueslati"
+  },
+  "metadata": {
+    "description": "Bibliothèque personnelle de skills, agents, hooks et serveurs MCP pour Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "lelib-core",
+      "source": "./plugins/lelib-core",
+      "description": "Plugin de base : exemples de skill, agent, commande, hook et serveur MCP."
+    }
+  ]
+}
