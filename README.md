@@ -19,14 +19,26 @@ La ville par défaut est Paris. Pour la changer, définir la variable d'environn
 
 ## Utilisation
 
-Dans ce dossier, les plugins sont activés automatiquement via `.claude/settings.json`.
-
-Pour les utiliser ailleurs, depuis un terminal `claude` :
+La marketplace est publiée sur GitHub : [trak05/lelib](https://github.com/trak05/lelib).
+Pour l'installer sur n'importe quel poste, depuis un terminal `claude` :
 
 ```
-/plugin marketplace add "C:\Users\NS6785\OneDrive - GRDF\Bureau\workspace\lelib"
+/plugin marketplace add trak05/lelib
 /plugin install lelib-core@lelib
 ```
+
+Ou, sans commande, dans `~/.claude/settings.json` (tous les projets) ou `.claude/settings.json` (un projet) :
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "lelib": { "source": { "source": "github", "repo": "trak05/lelib" } }
+  },
+  "enabledPlugins": { "lelib-core@lelib": true }
+}
+```
+
+Pour récupérer une nouvelle version après un `git push` : `/plugin marketplace update lelib`.
 
 ## Ajouter un plugin
 

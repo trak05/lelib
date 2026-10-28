@@ -27,4 +27,5 @@ plugins/<nom>/
 
 - Serveur MCP à la main : envoyer des lignes JSON-RPC sur stdin (`initialize`, `tools/list`, `tools/call`).
 - Hook à la main : `echo '{"tool_name":"Write","tool_input":{"file_path":"x"}}' | node hooks/scripts/<script>.js`
-- Après une modification, redémarrer la session Claude Code pour recharger le plugin.
+- La marketplace est installée depuis GitHub (`trak05/lelib`) : une modification n'est visible qu'après `git push`, puis `/plugin marketplace update lelib` et redémarrage de la session.
+- Pour tester avant de pousser : `claude --plugin-dir ./plugins/<nom>` charge le plugin directement depuis le dossier.

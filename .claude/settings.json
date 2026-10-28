@@ -2,8 +2,8 @@
   "extraKnownMarketplaces": {
     "lelib": {
       "source": {
-        "source": "directory",
-        "path": "C:\\Users\\NS6785\\OneDrive - GRDF\\Bureau\\workspace\\lelib"
+        "source": "github",
+        "repo": "trak05/lelib"
       }
     }
   },
