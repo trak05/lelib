@@ -13,6 +13,8 @@ Ma bibliothèque d'extensions Claude Code (skills, agents, commandes, hooks, ser
 
 ### Conception (lelib-conception)
 
+**Standard de la marketplace : Liquibase est l'unique outil de schéma.** Pas de Flyway, et `spring.jpa.hibernate.ddl-auto` reste à `validate`. Les agents `dev-back`, `dba` et `techlead-back` appliquent cette règle (un changement de schéma sans changeset, ou une migration appliquée modifiée, bloque la pull request). À l'ouverture d'une session dans un projet Java, un hook de `lelib-conception` le vérifie sans réseau et n'affiche rien si tout va bien ; il avertit en cas de Flyway, de `ddl-auto=update` / `create` / `create-drop`, ou de projet JPA sans Liquibase. Il se lance aussi à la main : `node plugins/lelib-conception/scripts/check-db-tool.js [dossier]`.
+
 Trois skills pour l'étape Conception. Elles s'appuient sur les agents de `lelib-equipe` (`dba`, tech leads) quand il est installé, et appliquent sinon elles-mêmes les mêmes règles.
 
 #### /api-contract
@@ -84,9 +86,9 @@ Ces règles sont écrites dans les agents : elles s'appliquent au code qu'ils é
 
 | Agent | Règles |
 |---|---|
-| `dev-back` | SOLID, règles d'or (KISS, YAGNI, DRY, méthodes courtes, pas de valeurs magiques, pas de `null` retourné, exceptions précises), nommage Java (`PascalCase`, `camelCase`, `UPPER_SNAKE_CASE`), transactions sur la couche service |
+| `dev-back` | SOLID, règles d'or (KISS, YAGNI, DRY, méthodes courtes, pas de valeurs magiques, pas de `null` retourné, exceptions précises), nommage Java (`PascalCase`, `camelCase`, `UPPER_SNAKE_CASE`), transactions sur la couche service, schéma uniquement via Liquibase (`ddl-auto=validate`) |
 | `dev-front` | SOLID, règles d'or, nommage TypeScript (`camelCase`, `PascalCase`, fichiers en `kebab-case`, `$` pour les flux), typage strict sans `any` |
-| `dba` | **ACID** : migrations transactionnelles (atomicité), contraintes en base (cohérence), niveau d'isolation et verrouillage choisis (isolation), sauvegarde avant toute opération destructive (durabilité) ; nommage SQL en `snake_case` |
+| `dba` | **ACID** : migrations Liquibase transactionnelles (atomicité), contraintes en base (cohérence), niveau d'isolation et verrouillage choisis (isolation), sauvegarde avant toute opération destructive (durabilité) ; nommage SQL en `snake_case` |
 
 - **Gravité en revue** : une violation SOLID ou ACID qui peut produire un bug ou une perte de données bloque la pull request. Un simple écart de nommage est une suggestion, sauf pour un nom de table, de colonne ou d'API déjà exposé.
 - **Adapter les règles** : elles sont dans les fichiers `agents/dev-back.md`, `agents/dev-front.md` et `agents/dba.md`, sous les titres « Règles de l'équipe » et « ACID ». Si un projet suit déjà une autre convention, l'agent la suit et signale l'écart.

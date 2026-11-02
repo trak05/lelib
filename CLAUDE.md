@@ -22,6 +22,7 @@ plugins/<nom>/
 - Un hook ne doit jamais bloquer : capturer les erreurs et sortir avec le code 0, sauf blocage voulu (code 2).
 - Tout nouveau plugin doit être ajouté dans `.claude-plugin/marketplace.json`, et activé dans `.claude/settings.json` (`enabledPlugins`) pour être testé ici.
 - Incrémenter `version` dans `plugin.json` à chaque changement publié.
+- **Base de données : Liquibase est l'unique outil de schéma** pour tous les projets qui utilisent la marketplace. Jamais Flyway, jamais `spring.jpa.hibernate.ddl-auto` à `update` / `create` / `create-drop` (`validate`). Tout agent ou skill qui touche au schéma passe par un changeset Liquibase (skill `/db-migration` du plugin `lelib-conception`).
 
 ## Tester
 

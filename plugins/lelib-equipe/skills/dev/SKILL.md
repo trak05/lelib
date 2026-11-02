@@ -32,7 +32,7 @@ Annonce en une ligne la liste des tickets que tu vas traiter avant de commencer.
 ### b. Développer en déléguant aux agents
 Détermine ce que le ticket touche d'après son contenu (« Besoin », « Pistes techniques »), puis délègue avec l'outil Agent, en donnant le chemin du ticket et la consigne de le lire :
 
-1. Le schéma de base change : agent `lelib-equipe:dba` en premier.
+1. Le schéma de base change : agent `lelib-equipe:dba` en premier, qui écrit un changeset **Liquibase** (skill `/db-migration` du plugin `lelib-conception`). Le schéma ne se modifie jamais autrement : ni `ddl-auto`, ni Flyway, ni SQL à la main.
 2. Le back est concerné : agent `lelib-equipe:dev-back`.
 3. Le front est concerné : agent `lelib-equipe:dev-front`, **après** le back si le front dépend d'un nouvel endpoint, pour qu'il parte du contrat réel.
 
