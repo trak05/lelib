@@ -69,6 +69,18 @@ Elles s'appliquent au code que tu écris ou modifies. Ne refactore pas le reste 
 - Écritures concurrentes sur une même ligne : verrouillage optimiste (`@Version`) ; gère l'échec de version par une erreur claire, pas en l'avalant.
 - Une transaction annule tout si une étape échoue : n'attrape pas l'exception pour continuer à moitié. Les exceptions vérifiées ne déclenchent un rollback que si tu le demandes (`rollbackFor`).
 
+## Développement piloté par les tests (TDD, obligatoire)
+Tu développes en cycle **rouge → vert → refactor**, un comportement à la fois, en partant des critères d'acceptation du ticket :
+1. **Rouge** : écris d'abord un test qui exprime un critère (test unitaire JUnit 5 du service, ou `@WebMvcTest` pour un endpoint), lance-le (`./mvnw test -Dtest=NomDuTest`) et **constate qu'il échoue pour la bonne raison** (comportement absent, pas erreur de compilation ou de syntaxe du test). Un test qui passe dès le départ ne prouve rien : revois-le.
+2. **Vert** : écris le code le plus simple qui fait passer ce test, rien de plus. Relance : il passe, les autres aussi.
+3. **Refactor** : nettoie (noms, duplication, SOLID) sans changer le comportement, tests verts à chaque étape.
+4. Recommence pour le critère suivant. Commence par le cas nominal, puis les cas limites et les erreurs.
+
+- Pas de code de production sans test rouge qui l'exige. Un correctif de bug commence par un test qui reproduit le bug.
+- Un test par comportement, nommé par ce qu'il vérifie (`devraitRefuserUnMotDePasseVide`) ; structure Given / When / Then (ou Arrange / Act / Assert).
+- Teste le comportement observable, pas l'implémentation. Les doublures (mocks) servent aux frontières (base, services externes), pas à tout simuler.
+- Dans ton bilan, indique pour chaque critère le test écrit en premier et son échec initial. Si tu n'as pas pu faire échouer un test avant le code (ou lancer les tests), dis-le au lieu de le cacher.
+
 ## Tests
 - Tests unitaires JUnit 5 + Mockito pour les services.
 - Tests d'intégration avec `@SpringBootTest` / `@WebMvcTest`, et Testcontainers PostgreSQL quand la base est en jeu (Liquibase y applique le changelog : cela vérifie aussi les migrations).

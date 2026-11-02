@@ -36,9 +36,12 @@ Détermine ce que le ticket touche d'après son contenu (« Besoin », « Pistes
 2. Le back est concerné : agent `lelib-equipe:dev-back`.
 3. Le front est concerné : agent `lelib-equipe:dev-front`, **après** le back si le front dépend d'un nouvel endpoint, pour qu'il parte du contrat réel.
 
+Les agents `dev-back` et `dev-front` travaillent en **TDD** (test rouge, code minimal, refactor). Rappelle-le dans ta consigne et demande-leur de rendre, par critère, le test écrit en premier et son échec initial.
+
 Un ticket qui ne touche qu'un côté ne mobilise que l'agent correspondant. Si le projet n'a qu'un seul côté (pas de back, ou pas de front), saute l'agent inutile.
 
 ### c. Vérifier
+- Le TDD a été suivi : chaque critère a un test, et le bilan de l'agent dit qu'il a d'abord échoué. Sinon, redemande-le à l'agent avant de clôturer.
 - Les tests des parties modifiées passent (les agents les lancent ; relance-les toi-même en cas de doute).
 - Chaque critère d'acceptation est couvert. Coche ceux qui le sont (`- [x]`) dans le ticket.
 

@@ -48,6 +48,18 @@ Elles s'appliquent au code que tu écris ou modifies. Ne refactore pas le reste 
 - PrimeNG adapté au petit écran : tableau avec `responsiveLayout` / `scrollable` (ou liste de cartes en mobile), boîtes de dialogue en pleine largeur (`[breakpoints]`), menu replié (burger) sur mobile.
 - Rien ne dépend du survol (`:hover`) : tout reste utilisable au doigt. Utilise les unités relatives (`rem`, `%`, `vw`) et les `@media` seulement quand la grille ne suffit pas.
 
+## Développement piloté par les tests (TDD, obligatoire)
+Tu développes en cycle **rouge → vert → refactor**, un comportement à la fois, en partant des critères d'acceptation du ticket :
+1. **Rouge** : écris d'abord un test qui exprime un critère (test du composant ou du service avec l'outil du projet), lance-le (`npm test`) et **constate qu'il échoue pour la bonne raison** (comportement absent, pas erreur de compilation ou de syntaxe du test). Un test qui passe dès le départ ne prouve rien : revois-le.
+2. **Vert** : écris le code le plus simple qui fait passer ce test, rien de plus. Relance : il passe, les autres aussi.
+3. **Refactor** : nettoie (noms, duplication, SOLID) sans changer le comportement, tests verts à chaque étape.
+4. Recommence pour le critère suivant. Commence par le cas nominal, puis les cas limites et les erreurs.
+
+- Pas de code de production sans test rouge qui l'exige. Un correctif de bug commence par un test qui reproduit le bug.
+- Un test par comportement, nommé par ce qu'il vérifie (`devraitRefuserUnMotDePasseVide`) ; structure Given / When / Then (ou Arrange / Act / Assert).
+- Teste le comportement observable, pas l'implémentation. Les doublures (mocks) servent aux frontières (appels HTTP, horloge, routeur), pas à tout simuler.
+- Dans ton bilan, indique pour chaque critère le test écrit en premier et son échec initial. Si tu n'as pas pu faire échouer un test avant le code (ou lancer les tests), dis-le au lieu de le cacher.
+
 ## Tests
 - Vérifie l'écran en mobile (375 px) et en ordinateur (1280 px) avant de dire que c'est fini.
 - Tests unitaires avec l'outil du projet (Vitest si présent). Teste le comportement, pas l'implémentation.
