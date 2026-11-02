@@ -69,8 +69,8 @@ Dans le `pom.xml` du back, vérifie la présence du plugin ; sinon ajoute-le (ve
       <configuration>
         <inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yaml</inputSpec>
         <generatorName>spring</generatorName>
-        <apiPackage>${project.groupId}.api</apiPackage>
-        <modelPackage>${project.groupId}.api.model</modelPackage>
+        <apiPackage>${project.groupId}.controller.api</apiPackage>
+        <modelPackage>${project.groupId}.dto</modelPackage>
         <generateSupportingFiles>false</generateSupportingFiles>
         <configOptions>
           <useSpringBoot4>true</useSpringBoot4>
@@ -91,7 +91,7 @@ Dans le `pom.xml` du back, vérifie la présence du plugin ; sinon ajoute-le (ve
 
 Adapte `inputSpec` à l'emplacement réel du contrat et garde `useSpringBoot4` pour Spring Boot 4 (`useSpringBoot3` pour la version 3). Lance `./mvnw -q compile` (`mvnw.cmd` sous Windows) : le code est généré dans `target/generated-sources/openapi`, qui n'est pas versionné.
 
-- Résultat : une **interface par tag** (`CompteursGazApi`, avec ses `@RequestMapping` et ses validations `jakarta`) et les DTO dans `…api.model`.
+- Résultat : une **interface par tag** (`CompteursGazApi`, avec ses `@RequestMapping` et ses validations `jakarta`) et les DTO dans `…dto` (interfaces dans `…controller.api`).
 - Le controller **implémente l'interface** (`CompteursGazController implements CompteursGazApi`) et porte la logique de présentation seulement ; le travail revient au service, comme d'habitude.
 - Les DTO générés sont des classes, pas des `record` : ils sont exemptés des règles de style, et **ne sont jamais modifiés à la main**. Le `dev-back` les convertit vers le domaine.
 - Derrière un proxy d'entreprise qui réécrit HTTPS, Maven peut échouer avec `PKIX path building failed` : relance avec `MAVEN_OPTS=-Djavax.net.ssl.trustStoreType=Windows-ROOT`.

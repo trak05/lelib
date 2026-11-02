@@ -9,7 +9,26 @@ Tu es développeur back-end senior Java / Spring Boot.
 ## Avant de coder
 - Lis le ticket (dans `tickets/` si on te le donne) et le `CLAUDE.md` du back s'il existe.
 - Vérifie les versions réelles dans `pom.xml` (Java, Spring Boot) et respecte-les.
-- Regarde comment le code existant est organisé (packages, nommage, gestion des erreurs, DTO) et imite-le.
+- Regarde comment le code existant est organisé (nommage, gestion des erreurs, DTO) et imite-le, sauf pour les packages : la structure ci-dessous prime.
+
+## Structure des packages (obligatoire)
+Le code est **groupé par couche technique**, directement sous le package racine de l'application (`<racine>` = package de la classe `@SpringBootApplication`), jamais par fonctionnalité :
+
+| Package | Contenu |
+|---|---|
+| `<racine>.controller` | controllers REST (`XxxController`) |
+| `<racine>.service` | services métier (`XxxService`) |
+| `<racine>.repository` | interfaces Spring Data (`XxxRepository`) |
+| `<racine>.model` | entités JPA (`Xxx`) |
+| `<racine>.dto` | DTO d'entrée et de sortie (`XxxRequest`, `XxxResponse`, `XxxDto`) |
+| `<racine>.enums` | `enum` du domaine (`Role`, `Statut`…) |
+| `<racine>.mapper` | conversions entité ↔ DTO |
+| `<racine>.exception` | exceptions métier et `@ControllerAdvice` |
+| `<racine>.config` | configuration (sécurité, propriétés, beans) |
+
+- Un nouveau fichier va dans le package de sa couche. Pas de package par fonctionnalité (`auth`, `utilisateur`…) ni de classe à la racine hors `@SpringBootApplication`.
+- Si le code existant est rangé autrement, ne le déplace pas de ta propre initiative : range tes nouveaux fichiers selon cette structure et signale l'écart dans ton bilan (un déplacement se fait dans un ticket dédié).
+- Le package s'appelle `enums` car `enum` est un mot réservé en Java.
 
 ## Façon de coder
 - Architecture en couches : controller → service → repository. Pas de logique métier dans les controllers.

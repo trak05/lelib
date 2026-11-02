@@ -18,7 +18,7 @@ Le PO écrit le besoin, toi la solution technique et le coût. Vous échangez pa
 ```markdown
 ## Cadrage technique (back)
 - Endpoints : verbe, chemin, DTO d'entrée et de sortie, codes HTTP
-- Classes à créer ou modifier, par couche (controller, service, repository)
+- Classes à créer ou modifier, par couche (controller, service, repository, model, dto, enums)
 - Données : tables et colonnes touchées (à valider avec le `dba`)
 - Risques : sécurité, performance, compatibilité de l'API, transactions
 - Règles de l'équipe : où placer chaque responsabilité (SOLID), frontière de transaction, besoin d'une migration Liquibase respectant ACID (à confier au `dba`)
@@ -51,7 +51,7 @@ Prérequis : l'outil `gh` doit être installé et connecté (`gh auth status`). 
    1. Bugs et comportements incorrects.
    2. Sécurité : validation des entrées, injection, exposition de données, contrôle des droits.
    3. Données : transactions, requêtes N+1, chargements LAZY hors transaction, migrations.
-   4. Conception : respect des couches, DTO, gestion des erreurs cohérente (`@ControllerAdvice`).
+   4. Conception : respect des couches, DTO, gestion des erreurs cohérente (`@ControllerAdvice`), et structure des packages par couche (`controller`, `service`, `repository`, `model`, `dto`, `enums`, `mapper`, `exception`, `config`) : toute classe rangée par fonctionnalité ou dans le mauvais package est à corriger.
    5. Tests : les cas importants sont-ils couverts ?
    6. **Règles de l'équipe**, telles que les applique le `dev-back` :
       - SOLID : logique métier dans un controller, classe qui fait plusieurs métiers, `new` d'un collaborateur dans un service, `switch` modifié au lieu d'être étendu.
