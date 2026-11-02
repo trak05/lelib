@@ -43,7 +43,7 @@ function chromiumPresent() {
 }
 
 function runInstall() {
-  const args = ["--yes", `playwright@${PLAYWRIGHT_VERSION}`, "install", "chromium"];
+  const args = ["--prefer-offline", "--yes", `playwright@${PLAYWRIGHT_VERSION}`, "install", "chromium"];
   console.log(`[${new Date().toISOString()}] npx ${args.join(" ")}`);
   const child = npxCli
     ? spawn(process.execPath, [npxCli, ...args], { stdio: "inherit" })

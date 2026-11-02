@@ -51,7 +51,8 @@ Le plugin embarque le serveur MCP [Playwright](https://github.com/microsoft/play
 - **Sans fenêtre** : `LELIB_PLAYWRIGHT_HEADLESS=1`, ou automatiquement quand la variable `CI` est définie.
 - **Restreindre les sites joignables** : `LELIB_QA_ORIGINS="http://localhost:4200;http://localhost:8080"`.
 - **Captures et traces** : écrites dans `.playwright-mcp/` du projet testé, à ajouter à son `.gitignore`.
-- **Premier démarrage** : le serveur est téléchargé avec `npx`, ce qui demande un accès à npm.
+- **Premier démarrage** : le serveur est téléchargé avec `npx`, ce qui demande un accès à npm (quelques secondes). Ensuite il démarre depuis le cache, sans réseau, avec `--prefer-offline` : sans cela, chaque démarrage interrogeait le registre npm et dépassait le délai de connexion de 30 s de Claude Code dès que le proxy était injoignable.
+- **Serveur « failed to connect »** : vérifie d'abord que le premier démarrage a pu télécharger le paquet (réseau ou proxy joignable), puis rouvre la session.
 
 #### Les tech leads
 

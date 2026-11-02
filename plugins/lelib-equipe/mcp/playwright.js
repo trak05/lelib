@@ -12,7 +12,10 @@ const { PLAYWRIGHT_MCP_VERSION, npxCli } = require("./common");
 // Par défaut le serveur cherche Google Chrome installé sur la machine ; on lui impose le Chromium
 // de Playwright, celui qu'installe le hook install-chromium.js.
 const browser = process.env.LELIB_PLAYWRIGHT_BROWSER || "chromium";
-const args = ["--yes", `@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}`, "--isolated", "--browser", browser];
+// --prefer-offline : si le paquet est déjà en cache, npx ne contacte pas le registre. Sans cela, chaque
+// démarrage interroge npm (via le proxy) et dépasse les 30 s de connexion MCP dès que le réseau ou le
+// proxy est injoignable. Cache vide : npx télécharge normalement.
+const args = ["--prefer-offline", "--yes", `@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}`, "--isolated", "--browser", browser];
 if (process.env.CI || process.env.LELIB_PLAYWRIGHT_HEADLESS === "1") args.push("--headless");
 if (process.env.LELIB_QA_ORIGINS) args.push("--allowed-origins", process.env.LELIB_QA_ORIGINS);
 

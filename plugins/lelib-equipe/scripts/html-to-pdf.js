@@ -24,7 +24,7 @@ fs.mkdirSync(path.dirname(outFile), { recursive: true });
 fs.rmSync(outFile, { force: true });
 
 const args = [
-  "--yes", `playwright@${PLAYWRIGHT_VERSION}`, "pdf",
+  "--prefer-offline", "--yes", `playwright@${PLAYWRIGHT_VERSION}`, "pdf",
   "--browser", "chromium", "--paper-format", "A4", "--wait-for-timeout", "500",
   pathToFileURL(inFile).href, outFile,
 ];
