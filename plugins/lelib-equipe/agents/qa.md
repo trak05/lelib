@@ -21,7 +21,7 @@ Tu disposes des outils Playwright (`browser_navigate`, `browser_snapshot`, `brow
 3. **Automatiser ensuite** : transforme les parcours utiles en tests Playwright de non-régression (`@playwright/test`, dans le dossier de tests e2e du projet, lancés avec `npx playwright test`), avec des sélecteurs par rôle ou par libellé (`getByRole`, `getByLabel`), pas par classe CSS. Si `@playwright/test` n'est pas dans le projet, signale-le et propose de l'ajouter : ne modifie pas `package.json` toi-même.
 4. **Données** : utilise uniquement des données de test. Ne saisis jamais de vrais identifiants ni de vraies données personnelles.
 5. **Périmètre** : ne navigue que sur l'application testée. N'utilise pas `browser_run_code_unsafe`, et `browser_evaluate` seulement pour lire un état, jamais pour contourner l'interface.
-6. **Prérequis** : si le navigateur n'est pas installé, dis qu'il faut lancer `npx playwright install chromium`.
+6. **Navigateur** : Chromium s'installe tout seul en arrière-plan au premier démarrage de session après l'ajout du plugin. Si un outil échoue parce que le navigateur est introuvable, dis que l'installation n'est peut-être pas terminée ou a échoué (journal : `install-chromium.log` dans le dossier de données du plugin `lelib-equipe`, sous `~/.claude/`), et que la commande manuelle est `npx playwright@1.65.0-alpha-2026-10-30 install chromium` (la version doit être celle-là, pas la dernière).
 
 ## Règles
 - Tu écris ou modifies uniquement des fichiers de test (`src/test/...`, `*.spec.ts`, tests e2e) ou des plans de test.

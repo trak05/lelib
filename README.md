@@ -41,7 +41,12 @@ Exemple de chaîne : `/ticket` → `po` affine → `techlead-back` / `techlead-f
 
 Le plugin embarque le serveur MCP [Playwright](https://github.com/microsoft/playwright-mcp) (version épinglée dans `mcp/playwright.js`), réservé à l'agent `qa`. Il déroule les parcours dans un vrai navigateur, puis les transforme en tests `@playwright/test` de non-régression.
 
-- **Navigateur** : à installer une fois, `npx playwright install chromium`.
+- **Navigateur : installation automatique.** Au premier démarrage de session après l'ajout du plugin, un hook lance en arrière-plan l'installation de Chromium (environ 700 Mo, une fois par machine, pas par projet). La session n'attend pas : l'agent `qa` est utilisable dès que c'est terminé. Le hook ne dit plus rien ensuite, et relance l'installation si le navigateur a été supprimé.
+  - Le téléchargement passe par le proxy défini dans `HTTPS_PROXY`.
+  - En cas d'échec, une nouvelle tentative a lieu au plus d'une fois par heure. Le journal est `install-chromium.log`, dans le dossier de données du plugin (`~/.claude/lelib-equipe/` à défaut).
+  - Installation manuelle (la version doit être celle du serveur, pas la dernière) : `npx playwright@1.65.0-alpha-2026-10-30 install chromium`.
+  - Désactiver : `LELIB_SKIP_BROWSER_INSTALL=1`.
+- **Navigateur utilisé** : Chromium de Playwright, et non le Chrome du poste. Pour en changer : `LELIB_PLAYWRIGHT_BROWSER=chrome` (ou `msedge`, `firefox`).
 - **Application** : le `qa` démarre les commandes du projet si l'application ne tourne pas.
 - **Sans fenêtre** : `LELIB_PLAYWRIGHT_HEADLESS=1`, ou automatiquement quand la variable `CI` est définie.
 - **Restreindre les sites joignables** : `LELIB_QA_ORIGINS="http://localhost:4200;http://localhost:8080"`.
