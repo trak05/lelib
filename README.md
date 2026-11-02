@@ -7,7 +7,7 @@ Ma bibliothèque d'extensions Claude Code (skills, agents, commandes, hooks, ser
 | Plugin | Contenu |
 |---|---|
 | `lelib-core` | skill `/ticket`, skill `hello-lelib`, agent `relecteur`, commande `/resume-session`, hook de journalisation des éditions (`~/.claude/lelib-edits.log`), serveur MCP `lelib-tools` (`ping`, `date_fr`) |
-| `lelib-equipe` | skill `/dev`, agents `po`, `dev-front`, `dev-back`, `qa`, `techlead-front`, `techlead-back`, `dba` |
+| `lelib-equipe` | skill `/dev`, agents `po`, `dev-front`, `dev-back`, `qa`, `techlead-front`, `techlead-back`, `dba`, serveur MCP `playwright` (tests dans le navigateur, pour le `qa`) |
 | `lelib-angular` | skills `angular-setup` et `angular-ui`, vérification de compatibilité Angular / Node à l'ouverture de session |
 
 ### Angular : Bootstrap + PrimeNG (lelib-angular)
@@ -33,9 +33,20 @@ node plugins/lelib-angular/scripts/check-compat.js [dossier]
 | `dev-back` | implémente le back et ses tests | code back |
 | `dev-front` | implémente le front et ses tests | code front |
 | `dba` | schéma, migrations, performance PostgreSQL | migrations, entités |
-| `qa` | vérifie les critères d'acceptation, cherche les cas limites | tests uniquement |
+| `qa` | vérifie les critères d'acceptation dans un vrai navigateur (Playwright), cherche les cas limites | tests uniquement |
 
 Exemple de chaîne : `/ticket` → `po` affine → `techlead-back` / `techlead-front` cadrent et estiment → `dba` si le schéma change → `dev-back` / `dev-front` codent → `qa` vérifie → pull request → les tech leads la valident.
+
+#### Le QA et Playwright
+
+Le plugin embarque le serveur MCP [Playwright](https://github.com/microsoft/playwright-mcp) (version épinglée dans `mcp/playwright.js`), réservé à l'agent `qa`. Il déroule les parcours dans un vrai navigateur, puis les transforme en tests `@playwright/test` de non-régression.
+
+- **Navigateur** : à installer une fois, `npx playwright install chromium`.
+- **Application** : le `qa` démarre les commandes du projet si l'application ne tourne pas.
+- **Sans fenêtre** : `LELIB_PLAYWRIGHT_HEADLESS=1`, ou automatiquement quand la variable `CI` est définie.
+- **Restreindre les sites joignables** : `LELIB_QA_ORIGINS="http://localhost:4200;http://localhost:8080"`.
+- **Captures et traces** : écrites dans `.playwright-mcp/` du projet testé, à ajouter à son `.gitignore`.
+- **Premier démarrage** : le serveur est téléchargé avec `npx`, ce qui demande un accès à npm.
 
 #### Les tech leads
 
