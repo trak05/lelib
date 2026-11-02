@@ -89,7 +89,7 @@ Lance les tests automatisés, puis produit un rapport PDF :
 - **Toute l'application** : suites de tests du back et du front, tests e2e existants, un passage sur chaque écran principal (page chargée, console sans erreur, aucune réponse 5xx), et les critères des tickets de `tickets/done/`.
 - **Rapport** : verdict (réussi, échec, partiel), compteurs, résultat par critère, anomalies avec étapes, attendu, obtenu et capture d'écran, commandes exécutées, limites. Il est produit même si des tests échouent.
 - **Nom du PDF** : `<ticket>-<AAAAMMJJ-HHMM>.pdf`, par exemple `bet-003-20261102-1015.pdf`. Sans ticket : `application-20261102-1015.pdf`.
-- **Remise** : le PDF est enregistré dans `rapports/` à la racine du projet, puis envoyé avec le téléchargement quand l'application le permet (application de bureau Claude), ou ouvert avec le lecteur PDF du poste. Pense à ajouter `rapports/` au `.gitignore` du projet.
+- **Remise** : le PDF est enregistré dans `rapport/auto-test/` à la racine du projet, puis envoyé avec le téléchargement quand l'application le permet (application de bureau Claude), ou ouvert avec le lecteur PDF du poste. Pense à ajouter `rapport/auto-test/` au `.gitignore` du projet.
 - Le PDF est fabriqué avec le Chromium de Playwright (script `scripts/html-to-pdf.js`), sans dépendance supplémentaire.
 
 ### /ticket

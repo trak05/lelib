@@ -32,13 +32,13 @@ Annonce en une ligne le périmètre retenu avant de commencer.
 Délègue avec l'outil Agent à `lelib-equipe:qa`. Dans ta consigne, donne : le périmètre, l'URL, le chemin du ticket s'il y en a un, et ce qui suit.
 
 - Il lance les suites concernées, déroule les parcours dans le navigateur, et écrit ou complète les tests e2e manquants selon ses règles habituelles.
-- Il range ses captures dans `rapports/.tmp-<nom>/` (il crée le dossier) et donne leur chemin absolu.
+- Il range ses captures dans `rapport/auto-test/.tmp-<nom>/` (il crée le dossier) et donne leur chemin absolu.
 - Il te rend un résultat structuré : environnement (versions, URL, navigateur, branche et commit si git), résultat par critère ou parcours, commandes exécutées avec leur issue, fichiers de test créés ou modifiés, anomalies (titre, étapes, attendu, obtenu, capture), et ce qu'il n'a pas pu vérifier.
 - Il ne déclare « réussi » que ce qu'il a réellement exécuté.
 
 ## 4. Écrire le rapport
 
-Copie le modèle `${CLAUDE_PLUGIN_ROOT}/skills/auto-test/rapport-modele.html` (s'il n'est pas résolu dans ton shell, retrouve-le avec Glob : `**/auto-test/rapport-modele.html`) vers `rapports/<nom>-<AAAAMMJJ-HHMM>.html`, et remplis-le avec le résultat du `qa`. La date et l'heure sont celles de maintenant (`date +%Y%m%d-%H%M`) ; elles servent aussi au nom du PDF.
+Copie le modèle `${CLAUDE_PLUGIN_ROOT}/skills/auto-test/rapport-modele.html` (s'il n'est pas résolu dans ton shell, retrouve-le avec Glob : `**/auto-test/rapport-modele.html`) vers `rapport/auto-test/<nom>-<AAAAMMJJ-HHMM>.html`, et remplis-le avec le résultat du `qa`. La date et l'heure sont celles de maintenant (`date +%Y%m%d-%H%M`) ; elles servent aussi au nom du PDF.
 
 - **Verdict** : `ko` si au moins une vérification a échoué ; sinon `partiel` si quelque chose n'a pas pu être exécuté ou n'est pas couvert ; sinon `ok`.
 - Les compteurs correspondent exactement aux lignes du tableau. Ne recopie que des faits fournis par le `qa` : n'invente aucun résultat, et n'adoucis pas un échec.
@@ -48,13 +48,15 @@ Copie le modèle `${CLAUDE_PLUGIN_ROOT}/skills/auto-test/rapport-modele.html` (s
 ## 5. Produire le PDF
 
 ```bash
-node "${CLAUDE_PLUGIN_ROOT}/scripts/html-to-pdf.js" "rapports/<nom>-<date>.html" "rapports/<nom>-<date>.pdf"
+node "${CLAUDE_PLUGIN_ROOT}/scripts/html-to-pdf.js" "rapport/auto-test/<nom>-<date>.html" "rapport/auto-test/<nom>-<date>.pdf"
 ```
 
 (Même remarque sur `${CLAUDE_PLUGIN_ROOT}` : retrouve `scripts/html-to-pdf.js` avec Glob si besoin.)
 
+Le PDF est enregistré dans le dossier `rapport/auto-test/` à la racine du projet. Le script crée ce dossier s'il n'existe pas : ne le crée pas à un autre endroit.
+
 - **Échec** (souvent Chromium pas encore installé) : montre l'erreur de la commande, garde le fichier HTML, ne dis pas qu'un PDF existe, et arrête-toi après le bilan.
-- **Succès** : supprime le fichier HTML et le dossier `rapports/.tmp-<nom>/` (tout est dans le PDF). Ne supprime rien d'autre.
+- **Succès** : supprime le fichier HTML et le dossier `rapport/auto-test/.tmp-<nom>/` (tout est dans le PDF). Ne supprime rien d'autre.
 
 ## 6. Remettre le PDF à l'utilisateur
 
@@ -63,11 +65,11 @@ Le PDF s'appelle `<nom>-<AAAAMMJJ-HHMM>.pdf`, par exemple `bet-003-20261102-1015
 - Si l'outil **SendUserFile** est disponible : envoie le PDF avec (`display: "attach"`), c'est ce qui déclenche le téléchargement.
 - Sinon, ouvre-le avec le lecteur par défaut du système (`Start-Process` sous Windows, `open` sous macOS, `xdg-open` sous Linux) et donne son chemin complet.
 
-Dans les deux cas, indique où il est enregistré (`rapports/` à la racine du projet).
+Dans les deux cas, le PDF reste enregistré dans `rapport/auto-test/` à la racine du projet : indique son chemin complet.
 
 ## 7. Bilan
 
-Réponds en quelques lignes : le verdict, les chiffres (réussies, échouées, non couvertes), les titres des anomalies, le chemin du PDF. Si `rapports/` n'est pas dans le `.gitignore` du projet, signale-le sans le modifier toi-même.
+Réponds en quelques lignes : le verdict, les chiffres (réussies, échouées, non couvertes), les titres des anomalies, le chemin du PDF. Si `rapport/auto-test/` n'est pas dans le `.gitignore` du projet, signale-le sans le modifier toi-même.
 
 ## Règles
 
