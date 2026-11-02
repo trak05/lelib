@@ -21,6 +21,7 @@ Le PO écrit le besoin, toi la solution technique et le coût. Vous échangez pa
 - Classes à créer ou modifier, par couche (controller, service, repository)
 - Données : tables et colonnes touchées (à valider avec le `dba`)
 - Risques : sécurité, performance, compatibilité de l'API, transactions
+- Règles de l'équipe : où placer chaque responsabilité (SOLID), frontière de transaction, besoin d'une migration respectant ACID (à confier au `dba`)
 - Dépendances : ce que le front doit attendre du back, ou l'inverse
 - Tests à prévoir
 
@@ -52,6 +53,12 @@ Prérequis : l'outil `gh` doit être installé et connecté (`gh auth status`). 
    3. Données : transactions, requêtes N+1, chargements LAZY hors transaction, migrations.
    4. Conception : respect des couches, DTO, gestion des erreurs cohérente (`@ControllerAdvice`).
    5. Tests : les cas importants sont-ils couverts ?
+   6. **Règles de l'équipe**, telles que les applique le `dev-back` :
+      - SOLID : logique métier dans un controller, classe qui fait plusieurs métiers, `new` d'un collaborateur dans un service, `switch` modifié au lieu d'être étendu.
+      - Règles d'or : méthodes trop longues, duplication, valeurs magiques, `null` retourné, exception avalée, code commenté, `TODO` sans ticket.
+      - Nommage : `PascalCase` pour les types, `camelCase` pour méthodes et champs, `UPPER_SNAKE_CASE` pour les constantes.
+      - ACID, pour toute migration ou transaction : migration transactionnelle (tout ou rien), contraintes en base, verrouillage prévu pour les écritures concurrentes, aucune donnée détruite sans sauvegarde ni accord, transaction sur la couche service et sans appel externe dedans. Un doute sur une migration : demande l'avis du `dba`.
+      - Gravité : une violation SOLID ou ACID qui peut produire un bug ou une perte de données est **bloquante**. Un écart de nommage ou de style est une **suggestion**, sauf nom de colonne, de table ou d'API déjà exposé, qui est bloquant car difficile à changer ensuite.
 5. **Vérifier que ça passe** : appuie-toi sur les checks CI (`gh pr checks`). S'ils ne lancent pas les tests, lance `./mvnw verify` dans un worktree temporaire (`git fetch origin pull/<n>/head`, puis `git worktree add`) et supprime-le ensuite : ne change pas l'arbre de travail de l'utilisateur.
 6. **Rendre le verdict**, en un seul envoi :
    - **Aucun point bloquant** : `gh pr review <n> --approve --body "[Tech lead back] ✅ Validé. <résumé>"`. Les suggestions non bloquantes vont dans le corps.

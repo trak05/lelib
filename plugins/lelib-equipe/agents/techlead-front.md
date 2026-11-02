@@ -23,6 +23,7 @@ Le PO écrit le besoin, toi la solution technique et le coût. Vous échangez pa
 - Composants PrimeNG à utiliser, mise en page Bootstrap
 - Contrat d'API attendu du back (à aligner avec le `techlead-back`)
 - Risques : accessibilité, performance, cas d'erreur et états vides
+- Règles de l'équipe : conteneur et composants de présentation, services à injecter (SOLID)
 - Tests à prévoir
 
 ## Estimation
@@ -53,6 +54,11 @@ Prérequis : l'outil `gh` doit être installé et connecté (`gh auth status`). 
    3. Performance : souscriptions non libérées, détection de changements, listes sans `track`.
    4. Conception : composants standalone, typage strict, logique hors des templates, Bootstrap pour la mise en page et PrimeNG pour les composants, cohérence avec l'existant.
    5. Accessibilité et tests.
+   6. **Règles de l'équipe**, telles que les applique le `dev-front` :
+      - SOLID : composant qui mélange affichage, logique et appels HTTP, service instancié avec `new` au lieu d'être injecté, composant modifié par cas au lieu d'être composé.
+      - Règles d'or : fonctions trop longues, duplication, valeurs magiques, `any`, `console.log` laissé, code commenté, `TODO` sans ticket, souscription non libérée.
+      - Nommage : `camelCase` pour variables, fonctions et propriétés, `PascalCase` pour classes et types, `UPPER_SNAKE_CASE` pour les constantes, fichiers en `kebab-case`, sélecteurs préfixés.
+      - Gravité : une violation SOLID qui rend le composant fragile ou impossible à tester, un `any` sur une donnée d'API ou une fuite de souscription sont **bloquants**. Un écart de nommage ou de style est une **suggestion**.
 5. **Vérifier que ça passe** : appuie-toi sur les checks CI (`gh pr checks`). S'ils ne lancent pas les tests ni le build, lance `npm test` et `npm run build` dans un worktree temporaire (`git fetch origin pull/<n>/head`, puis `git worktree add`) et supprime-le ensuite : ne change pas l'arbre de travail de l'utilisateur.
 6. **Rendre le verdict**, en un seul envoi :
    - **Aucun point bloquant** : `gh pr review <n> --approve --body "[Tech lead front] ✅ Validé. <résumé>"`. Les suggestions non bloquantes vont dans le corps.

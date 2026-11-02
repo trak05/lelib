@@ -37,6 +37,20 @@ node plugins/lelib-angular/scripts/check-compat.js [dossier]
 
 Exemple de chaîne : `/ticket` → `po` affine → `techlead-back` / `techlead-front` cadrent et estiment → `dba` si le schéma change → `dev-back` / `dev-front` codent → `qa` vérifie → pull request → les tech leads la valident.
 
+#### Règles de code de l'équipe
+
+Ces règles sont écrites dans les agents : elles s'appliquent au code qu'ils écrivent ou modifient (sans refactorer le reste du projet), et les tech leads les contrôlent à la revue des pull requests.
+
+| Agent | Règles |
+|---|---|
+| `dev-back` | SOLID, règles d'or (KISS, YAGNI, DRY, méthodes courtes, pas de valeurs magiques, pas de `null` retourné, exceptions précises), nommage Java (`PascalCase`, `camelCase`, `UPPER_SNAKE_CASE`), transactions sur la couche service |
+| `dev-front` | SOLID, règles d'or, nommage TypeScript (`camelCase`, `PascalCase`, fichiers en `kebab-case`, `$` pour les flux), typage strict sans `any` |
+| `dba` | **ACID** : migrations transactionnelles (atomicité), contraintes en base (cohérence), niveau d'isolation et verrouillage choisis (isolation), sauvegarde avant toute opération destructive (durabilité) ; nommage SQL en `snake_case` |
+
+- **Gravité en revue** : une violation SOLID ou ACID qui peut produire un bug ou une perte de données bloque la pull request. Un simple écart de nommage est une suggestion, sauf pour un nom de table, de colonne ou d'API déjà exposé.
+- **Adapter les règles** : elles sont dans les fichiers `agents/dev-back.md`, `agents/dev-front.md` et `agents/dba.md`, sous les titres « Règles de l'équipe » et « ACID ». Si un projet suit déjà une autre convention, l'agent la suit et signale l'écart.
+- **Limite** : ce sont des consignes aux agents, pas un contrôle automatique. Pour un contrôle qui bloque réellement, ajoute Checkstyle ou ArchUnit côté Java, ESLint côté Angular, et fais-les tourner en CI.
+
 #### Le QA et Playwright
 
 Le plugin embarque le serveur MCP [Playwright](https://github.com/microsoft/playwright-mcp) (version épinglée dans `mcp/playwright.js`), réservé à l'agent `qa`. Il déroule les parcours dans un vrai navigateur, puis les transforme en tests `@playwright/test` de non-régression.
