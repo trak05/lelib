@@ -9,6 +9,47 @@ Ma bibliothèque d'extensions Claude Code (skills, agents, commandes, hooks, ser
 | `lelib-core` | skill `/ticket`, skill `hello-lelib`, agent `relecteur`, commande `/resume-session`, hook de journalisation des éditions (`~/.claude/lelib-edits.log`), serveur MCP `lelib-tools` (`ping`, `date_fr`) |
 | `lelib-equipe` | skills `/dev` et `/auto-test`, agents `po`, `dev-front`, `dev-back`, `qa`, `techlead-front`, `techlead-back`, `dba`, serveur MCP `playwright` (tests dans le navigateur, pour le `qa`) |
 | `lelib-angular` | skills `angular-setup` et `angular-ui`, vérification de compatibilité Angular / Node à l'ouverture de session |
+| `lelib-conception` | étape Conception du cycle de dev : skills `/api-contract` (OpenAPI), `/db-migration` (Liquibase) et `/adr`, script de contrôle des migrations |
+
+### Conception (lelib-conception)
+
+Trois skills pour l'étape Conception. Elles s'appuient sur les agents de `lelib-equipe` (`dba`, tech leads) quand il est installé, et appliquent sinon elles-mêmes les mêmes règles.
+
+#### /api-contract
+
+```
+/api-contract 3                       # le besoin d'API du ticket 3
+/api-contract lister les compteurs    # ou une description
+```
+
+Contract-first : le contrat OpenAPI 3.0 est écrit ou mis à jour **avant** le code, vérifié avec Redocly, puis :
+- **back** : le plugin Maven `openapi-generator` (7.27.0, générateur `spring`, options `useSpringBoot4` et `interfaceOnly`) génère une interface par tag et les DTO ; le controller **implémente** l'interface ;
+- **front** : `ng-openapi-gen` (1.1.0) génère les modèles et un service `Api` pour Angular.
+
+La skill compile les deux côtés pour prouver qu'ils sont alignés, et liste les **ruptures de compatibilité** du contrat. Règles du contrat : chemins en minuscules avec tirets au pluriel, `camelCase` pour les propriétés, `UPPER_SNAKE_CASE` pour les `enum`, erreurs en `application/problem+json` (schéma `ErreurResponse`, jamais `ProblemDetail`, qui entre en collision avec Spring). Si le back et le front sont dans deux dépôts git, le contrat vit dans le dépôt du back.
+
+#### /db-migration
+
+```
+/db-migration 4                                  # le changement de schéma du ticket 4
+/db-migration ajouter un statut aux compteurs
+```
+
+Migrations **Liquibase** en SQL formaté, écrites avec l'agent `dba` :
+- un fichier = un changeset = un changement, nommé `AAAAMMJJHHMM-verbe-objet.sql`, dans `src/main/resources/db/changelog/changes/` ;
+- `--rollback` obligatoire, et **jamais de modification d'une migration déjà appliquée** (on en écrit une nouvelle) ;
+- index en `CONCURRENTLY` dans leur propre changeset, contraintes ajoutées en `NOT VALID` puis validées, schéma et données séparés.
+
+Le script `scripts/check-migrations.js` contrôle ces règles par rapport à la branche de base (`origin/main`, sinon `main`) : migration existante modifiée, renommée ou supprimée, nom invalide, rollback absent, horodatage trop ancien… Il se lance aussi à la main : `node plugins/lelib-conception/scripts/check-migrations.js [dossier] [--base <réf>] [--json]`.
+Projet sans Liquibase : la skill propose `spring-boot-starter-liquibase` et le passage de `ddl-auto` à `validate`, et **demande avant de modifier la configuration**. Liquibase 5.x est sous licence FSL-1.1-ALv2 (et non plus Apache 2).
+
+#### /adr
+
+```
+/adr utiliser Liquibase pour les migrations
+```
+
+Écrit un ADR (Architecture Decision Record) en français dans `docs/adr/NNNN-titre.md` : contexte, critères, options avec avantages et inconvénients, décision, conséquences, références. Numérotation automatique, index `docs/adr/README.md` tenu à jour, statuts Proposé, Accepté, Rejeté, Déprécié, Remplacé par ADR-NNNN. La skill n'invente jamais une décision : elle pose la question s'il manque la décision ou les options. Un ADR accepté n'est jamais réécrit, un nouvel ADR le remplace.
 
 ### Angular : Bootstrap + PrimeNG (lelib-angular)
 
@@ -129,9 +170,10 @@ Pour l'installer sur n'importe quel poste, depuis un terminal `claude` :
 /plugin install lelib-core@lelib
 /plugin install lelib-equipe@lelib
 /plugin install lelib-angular@lelib
+/plugin install lelib-conception@lelib
 ```
 
-`lelib-core`, `lelib-equipe` et `lelib-angular` s'installent indépendamment : n'installe que ceux dont tu as besoin.
+`lelib-core`, `lelib-equipe`, `lelib-angular` et `lelib-conception` s'installent indépendamment : n'installe que ceux dont tu as besoin.
 
 Ou, sans commande, dans `~/.claude/settings.json` (tous les projets) ou `.claude/settings.json` (un projet) :
 
@@ -143,7 +185,8 @@ Ou, sans commande, dans `~/.claude/settings.json` (tous les projets) ou `.claude
   "enabledPlugins": {
     "lelib-core@lelib": true,
     "lelib-equipe@lelib": true,
-    "lelib-angular@lelib": true
+    "lelib-angular@lelib": true,
+    "lelib-conception@lelib": true
   }
 }
 ```

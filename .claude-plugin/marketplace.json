@@ -18,6 +18,11 @@
       "description": "Équipe d'agents pour projets Spring Boot / Angular : PO, dev front, dev back, QA, tech leads front et back, DBA."
     },
     {
+      "name": "lelib-conception",
+      "source": "./plugins/lelib-conception",
+      "description": "Étape Conception du cycle de dev : contrat d'API (OpenAPI) avec génération Java et Angular, migrations Liquibase, décisions d'architecture (ADR)."
+    },
+    {
       "name": "lelib-angular",
       "source": "./plugins/lelib-angular",
       "description": "Angular avec Bootstrap (grille et flex) et PrimeNG : installation alignée sur les versions d'Angular et de Node du projet, et conventions d'interface."
