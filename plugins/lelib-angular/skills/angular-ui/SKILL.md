@@ -25,6 +25,11 @@ description: "Conventions d'interface pour les projets Angular qui utilisent Boo
 
 Avant d'employer un composant, vérifie son nom et son import dans la version de PrimeNG installée (`node_modules/primeng`, ou https://primeng.org) : les noms et les modules ont changé entre versions majeures.
 
+## Responsive (web et mobile)
+- Mobile d'abord : conçois pour 360 px, puis élargis avec les points de rupture Bootstrap (`col-12 col-md-6 col-lg-4`). Aucun défilement horizontal de 320 à 1920 px.
+- `p-table` : `[scrollable]="true"` ou colonnes masquées en petit écran (`d-none d-md-table-cell`), ou liste de cartes en mobile. `p-dialog` : `[breakpoints]` pour passer en pleine largeur. Menu replié (burger) en mobile.
+- Cibles tactiles de 44 px minimum, champs de saisie à 16 px, rien qui dépende du survol, pas de largeur fixe en `px` sur un conteneur.
+
 ## Règles
 
 - Composants Angular standalone, état avec les signals, formulaires réactifs typés.

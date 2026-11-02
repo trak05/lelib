@@ -104,7 +104,7 @@ Ces règles sont écrites dans les agents : elles s'appliquent au code qu'ils é
 | Agent | Règles |
 |---|---|
 | `dev-back` | SOLID, règles d'or (KISS, YAGNI, DRY, méthodes courtes, pas de valeurs magiques, pas de `null` retourné, exceptions précises), nommage Java (`PascalCase`, `camelCase`, `UPPER_SNAKE_CASE`), transactions sur la couche service, packages groupés par couche (`controller`, `service`, `repository`, `model`, `dto`, `enums`, `mapper`, `exception`, `config`), schéma uniquement via Liquibase (`ddl-auto=validate`) |
-| `dev-front` | SOLID, règles d'or, nommage TypeScript (`camelCase`, `PascalCase`, fichiers en `kebab-case`, `$` pour les flux), typage strict sans `any` |
+| `dev-front` | SOLID, règles d'or, nommage TypeScript (`camelCase`, `PascalCase`, fichiers en `kebab-case`, `$` pour les flux), typage strict sans `any`, **responsive web et mobile** (mobile d'abord, grille Bootstrap, cibles tactiles) |
 | `dba` | **ACID** : migrations Liquibase transactionnelles (atomicité), contraintes en base (cohérence), niveau d'isolation et verrouillage choisis (isolation), sauvegarde avant toute opération destructive (durabilité) ; nommage SQL en `snake_case` |
 
 - **Gravité en revue** : une violation SOLID ou ACID qui peut produire un bug ou une perte de données bloque la pull request. Un simple écart de nommage est une suggestion, sauf pour un nom de table, de colonne ou d'API déjà exposé.

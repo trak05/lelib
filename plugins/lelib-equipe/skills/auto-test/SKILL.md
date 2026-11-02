@@ -31,6 +31,7 @@ Annonce en une ligne le périmètre retenu avant de commencer.
 
 Délègue avec l'outil Agent à `lelib-equipe:qa`. Dans ta consigne, donne : le périmètre, l'URL, le chemin du ticket s'il y en a un, et ce qui suit.
 
+- Il vérifie chaque écran en mobile (375 px), tablette et ordinateur, et signale les anomalies responsive avec une capture par format.
 - Il lance les suites concernées, déroule les parcours dans le navigateur, et écrit ou complète les tests e2e manquants selon ses règles habituelles.
 - Il range ses captures dans `rapport/auto-test/.tmp-<nom>/` (il crée le dossier) et donne leur chemin absolu.
 - Il te rend un résultat structuré : environnement (versions, URL, navigateur, branche et commit si git), résultat par critère ou parcours, commandes exécutées avec leur issue, fichiers de test créés ou modifiés, anomalies (titre, étapes, attendu, obtenu, capture), et ce qu'il n'a pas pu vérifier.

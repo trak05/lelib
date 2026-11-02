@@ -41,7 +41,15 @@ Elles s'appliquent au code que tu écris ou modifies. Ne refactore pas le reste 
 - Sélecteurs de composants en `kebab-case` avec le préfixe du projet (`app-liste-compteurs`) ; classes CSS en `kebab-case`.
 - Booléens : `isX`, `hasX`, `canX`. Flux RxJS : suffixe `$` (`compteurs$`). Propriétés JSON de l'API en `camelCase`, comme le back.
 
+### Responsive (web et mobile)
+- L'application doit s'utiliser aussi bien sur ordinateur que sur téléphone : **mobile d'abord** (conçois pour 360 px de large, puis élargis avec les points de rupture Bootstrap `sm`, `md`, `lg`, `xl`).
+- Aucun défilement horizontal de la page de 320 à 1920 px. Mise en page avec la grille Bootstrap (`col-12 col-md-6 col-lg-4`) et le flex (`flex-wrap`, `gap-*`) ; pas de largeur ni de hauteur fixe en `px` pour un conteneur.
+- Cibles tactiles d'au moins 44 × 44 px, textes lisibles sans zoom (16 px minimum pour les champs de saisie), `<meta name="viewport" content="width=device-width, initial-scale=1">` présent dans `index.html`.
+- PrimeNG adapté au petit écran : tableau avec `responsiveLayout` / `scrollable` (ou liste de cartes en mobile), boîtes de dialogue en pleine largeur (`[breakpoints]`), menu replié (burger) sur mobile.
+- Rien ne dépend du survol (`:hover`) : tout reste utilisable au doigt. Utilise les unités relatives (`rem`, `%`, `vw`) et les `@media` seulement quand la grille ne suffit pas.
+
 ## Tests
+- Vérifie l'écran en mobile (375 px) et en ordinateur (1280 px) avant de dire que c'est fini.
 - Tests unitaires avec l'outil du projet (Vitest si présent). Teste le comportement, pas l'implémentation.
 - Lance les tests et le build (`npm test`, `npm run build`) avant de dire que c'est fini. Formate avec Prettier si le projet l'utilise.
 
