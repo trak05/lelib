@@ -7,7 +7,7 @@ Ma bibliothèque d'extensions Claude Code (skills, agents, commandes, hooks, ser
 | Plugin | Contenu |
 |---|---|
 | `lelib-core` | skill `/ticket`, skill `hello-lelib`, agent `relecteur`, commande `/resume-session`, hook de journalisation des éditions (`~/.claude/lelib-edits.log`), serveur MCP `lelib-tools` (`ping`, `date_fr`) |
-| `lelib-equipe` | skill `/dev`, agents `po`, `dev-front`, `dev-back`, `qa`, `techlead-front`, `techlead-back`, `dba`, serveur MCP `playwright` (tests dans le navigateur, pour le `qa`) |
+| `lelib-equipe` | skills `/dev` et `/auto-test`, agents `po`, `dev-front`, `dev-back`, `qa`, `techlead-front`, `techlead-back`, `dba`, serveur MCP `playwright` (tests dans le navigateur, pour le `qa`) |
 | `lelib-angular` | skills `angular-setup` et `angular-ui`, vérification de compatibilité Angular / Node à l'ouverture de session |
 
 ### Angular : Bootstrap + PrimeNG (lelib-angular)
@@ -75,6 +75,22 @@ Pour chaque ticket : `dba` si le schéma change, puis `dev-back`, puis `dev-fron
 En cas d'échec, le ticket reste dans `tickets/` avec une section `## Blocage` et `/dev` s'arrête, car les tickets suivants peuvent en dépendre. Un ticket dont les questions ouvertes bloquent le développement est sauté (sans argument) ou fait poser la question (avec un numéro). `/dev` ne fait jamais de commit.
 
 On appelle les agents en langage naturel : « demande au techlead-back de relire ce controller », « fais vérifier bet-001 par le qa ».
+
+### /auto-test
+
+Lance les tests automatisés, puis produit un rapport PDF :
+
+```
+/auto-test 3     # les critères d'acceptation du ticket 3
+/auto-test       # toute l'application
+```
+
+- **Ticket** : le `qa` vérifie les critères d'acceptation du ticket dans un vrai navigateur, lance les tests concernés et complète les tests e2e manquants.
+- **Toute l'application** : suites de tests du back et du front, tests e2e existants, un passage sur chaque écran principal (page chargée, console sans erreur, aucune réponse 5xx), et les critères des tickets de `tickets/done/`.
+- **Rapport** : verdict (réussi, échec, partiel), compteurs, résultat par critère, anomalies avec étapes, attendu, obtenu et capture d'écran, commandes exécutées, limites. Il est produit même si des tests échouent.
+- **Nom du PDF** : `<ticket>-<AAAAMMJJ-HHMM>.pdf`, par exemple `bet-003-20261102-1015.pdf`. Sans ticket : `application-20261102-1015.pdf`.
+- **Remise** : le PDF est enregistré dans `rapports/` à la racine du projet, puis envoyé avec le téléchargement quand l'application le permet (application de bureau Claude), ou ouvert avec le lecteur PDF du poste. Pense à ajouter `rapports/` au `.gitignore` du projet.
+- Le PDF est fabriqué avec le Chromium de Playwright (script `scripts/html-to-pdf.js`), sans dépendance supplémentaire.
 
 ### /ticket
 

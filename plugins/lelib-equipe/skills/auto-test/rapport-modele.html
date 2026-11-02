@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<!--
+  Modèle du rapport de test automatisé. Copie ce fichier, remplace tout ce qui est entre {{ }},
+  répète les blocs marqués REPETER autant de fois que nécessaire, supprime les blocs vides
+  et ces commentaires. Un seul fichier HTML, styles inclus (il est converti en PDF A4).
+  Classes de statut : ok (réussi), ko (échoué), na (non couvert ou non exécuté).
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Rapport de test automatisé : {{NOM}}</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font: 10.5pt/1.45 "Segoe UI", Helvetica, Arial, sans-serif; color: #1f2933; margin: 0; }
+  h1 { font-size: 20pt; margin: 0 0 2pt; }
+  h2 { font-size: 13pt; margin: 18pt 0 6pt; padding-bottom: 3pt; border-bottom: 1.5px solid #d5dbe1; break-after: avoid; }
+  .sous-titre { color: #52606d; margin: 0 0 10pt; }
+  .meta { color: #52606d; font-size: 9.5pt; margin-bottom: 12pt; }
+  .verdict { padding: 10pt 14pt; border-radius: 6pt; font-size: 14pt; font-weight: 600; margin: 8pt 0 10pt; }
+  .verdict small { display: block; font-size: 10pt; font-weight: 400; margin-top: 2pt; }
+  .verdict.ok { background: #e3f6ea; color: #14612e; border-left: 6pt solid #1f9d55; }
+  .verdict.ko { background: #fde8e8; color: #8a1c1c; border-left: 6pt solid #d64545; }
+  .verdict.partiel { background: #fff4d6; color: #7a5200; border-left: 6pt solid #e0a100; }
+  .compteurs { display: flex; gap: 8pt; margin-bottom: 4pt; }
+  .compteur { flex: 1; border: 1px solid #d5dbe1; border-radius: 6pt; padding: 7pt 9pt; text-align: center; }
+  .compteur b { display: block; font-size: 18pt; }
+  .compteur.ok b { color: #1f9d55; } .compteur.ko b { color: #d64545; } .compteur.na b { color: #9aa5b1; }
+  table { width: 100%; border-collapse: collapse; margin: 4pt 0; font-size: 9.5pt; }
+  th, td { text-align: left; vertical-align: top; padding: 5pt 7pt; border-bottom: 1px solid #e4e7eb; }
+  th { background: #f0f4f8; font-weight: 600; }
+  tr { break-inside: avoid; }
+  .statut { display: inline-block; padding: 1pt 7pt; border-radius: 9pt; font-size: 8.5pt; font-weight: 600; white-space: nowrap; }
+  .statut.ok { background: #e3f6ea; color: #14612e; }
+  .statut.ko { background: #fde8e8; color: #8a1c1c; }
+  .statut.na { background: #eceff3; color: #52606d; }
+  .anomalie { border: 1px solid #f2b8b8; border-left: 5pt solid #d64545; border-radius: 5pt; padding: 8pt 11pt; margin: 8pt 0; break-inside: avoid; }
+  .anomalie h3 { font-size: 11pt; margin: 0 0 4pt; }
+  .anomalie p { margin: 2pt 0; }
+  .anomalie img { max-width: 100%; max-height: 90mm; border: 1px solid #d5dbe1; margin-top: 6pt; }
+  code, pre { font: 9pt Consolas, "Courier New", monospace; background: #f0f4f8; border-radius: 3pt; }
+  code { padding: 0 3pt; }
+  pre { padding: 6pt 8pt; white-space: pre-wrap; margin: 4pt 0; }
+  .vide { color: #7b8794; font-style: italic; }
+  footer { margin-top: 20pt; padding-top: 6pt; border-top: 1px solid #d5dbe1; color: #7b8794; font-size: 8.5pt; }
+</style>
+</head>
+<body>
+
+<h1>Rapport de test automatisé</h1>
+<p class="sous-titre">{{PÉRIMÈTRE : « Ticket bet-003 : titre du ticket » ou « Application complète »}}</p>
+<p class="meta">Projet {{NOM DU PROJET}} · {{DATE ET HEURE, ex. 02/11/2026 10:15}}</p>
+
+<!-- Classe du verdict : ok si tout est réussi, ko si au moins un échec, partiel si des tests n'ont pas pu être exécutés -->
+<div class="verdict {{ok|ko|partiel}}">{{VERDICT : Réussi / Échec / Partiel}}
+  <small>{{Une phrase : par exemple « 12 tests sur 14 réussis, 2 anomalies » }}</small>
+</div>
+
+<div class="compteurs">
+  <div class="compteur"><b>{{TOTAL}}</b>vérifications</div>
+  <div class="compteur ok"><b>{{N}}</b>réussies</div>
+  <div class="compteur ko"><b>{{N}}</b>échouées</div>
+  <div class="compteur na"><b>{{N}}</b>non couvertes</div>
+</div>
+
+<h2>Environnement</h2>
+<table>
+  <!-- REPETER -->
+  <tr><th style="width:32%">{{Libellé, ex. Application testée}}</th><td>{{Valeur, ex. http://localhost:4200}}</td></tr>
+  <!-- Suggestions : application (URL), navigateur, Node, Angular, Java / Spring Boot, branche et commit, durée totale -->
+</table>
+
+<h2>Résultats</h2>
+<table>
+  <tr><th style="width:34%">{{Critère d'acceptation ou parcours}}</th><th>Test</th><th style="width:15%">Résultat</th></tr>
+  <!-- REPETER -->
+  <tr>
+    <td>{{Critère ou parcours}}</td>
+    <td>{{Test exécuté, automatisé ou non, avec son fichier}}</td>
+    <td><span class="statut {{ok|ko|na}}">{{Réussi / Échec / Non couvert}}</span></td>
+  </tr>
+</table>
+
+<h2>Anomalies</h2>
+<!-- REPETER. S'il n'y en a aucune, remplace tout le bloc par : <p class="vide">Aucune anomalie constatée.</p> -->
+<div class="anomalie">
+  <h3>{{Titre court de l'anomalie}}</h3>
+  <p><b>Étapes :</b> {{1. … 2. … 3. …}}</p>
+  <p><b>Attendu :</b> {{résultat attendu}}</p>
+  <p><b>Obtenu :</b> {{résultat obtenu, message d'erreur}}</p>
+  <img src="{{file:///chemin/absolu/vers/capture.png (supprime cette ligne s'il n'y a pas de capture)}}" alt="Capture">
+</div>
+
+<h2>Commandes exécutées</h2>
+<table>
+  <tr><th style="width:38%">Commande</th><th style="width:15%">Résultat</th><th>Détail</th></tr>
+  <!-- REPETER -->
+  <tr>
+    <td><code>{{./mvnw test}}</code></td>
+    <td><span class="statut {{ok|ko|na}}">{{Réussi / Échec / Non lancé}}</span></td>
+    <td>{{ex. 48 tests, 0 échec ; ou la raison de l'échec}}</td>
+  </tr>
+</table>
+
+<h2>Limites</h2>
+<!-- Ce qui n'a pas pu être vérifié et pourquoi. S'il n'y a rien : <p class="vide">Aucune limite à signaler.</p> -->
+<ul>
+  <li>{{ex. Rendu sur mobile non vérifié}}</li>
+</ul>
+
+<footer>Rapport généré automatiquement par l'agent qa (lelib-equipe) · {{DATE ET HEURE}}</footer>
+
+</body>
+</html>
