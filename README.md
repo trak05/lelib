@@ -28,14 +28,23 @@ node plugins/lelib-angular/scripts/check-compat.js [dossier]
 | Agent | Rôle | Modifie |
 |---|---|---|
 | `po` | clarifie le besoin, rédige tickets et critères d'acceptation | `tickets/` uniquement |
-| `techlead-back` | conçoit et relit le back Spring Boot | rien (lecture seule) |
-| `techlead-front` | conçoit et relit le front Angular | rien (lecture seule) |
+| `techlead-back` | cadre et estime les tickets avec le PO, valide les pull requests du back | le ticket seulement, jamais le code |
+| `techlead-front` | cadre et estime les tickets avec le PO, valide les pull requests du front | le ticket seulement, jamais le code |
 | `dev-back` | implémente le back et ses tests | code back |
 | `dev-front` | implémente le front et ses tests | code front |
 | `dba` | schéma, migrations, performance PostgreSQL | migrations, entités |
 | `qa` | vérifie les critères d'acceptation, cherche les cas limites | tests uniquement |
 
-Exemple de chaîne : `/ticket` → `po` affine → `techlead-back` / `techlead-front` conçoivent → `dba` si le schéma change → `dev-back` / `dev-front` codent → `qa` vérifie → tech leads relisent.
+Exemple de chaîne : `/ticket` → `po` affine → `techlead-back` / `techlead-front` cadrent et estiment → `dba` si le schéma change → `dev-back` / `dev-front` codent → `qa` vérifie → pull request → les tech leads la valident.
+
+#### Les tech leads
+
+- **Cadrage et estimation** : chaque tech lead complète le ticket par une section « Cadrage technique », une estimation en points (1, 2, 3, 5, 8, 13 ; `points_back` et `points_front` dans l'en-tête) et ses « Questions pour le PO ». Le PO y répond dans le ticket, ou les remonte à l'utilisateur. Au-delà de 8 points, le ticket est découpé. Le ticket passe à `estimé` quand tous les côtés concernés ont leurs points et qu'aucune question bloquante ne reste.
+- **Validation d'une pull request GitHub** : le tech lead concerné (back ou front, selon les fichiers) relit le diff, vérifie les checks et les critères d'acceptation du ticket, puis approuve, ou demande des modifications avec des commentaires en ligne dans la pull request. Il ne fusionne jamais et ne modifie jamais le code.
+- **Prérequis** : l'outil [`gh`](https://cli.github.com) installé et connecté (`gh auth login`).
+- **Limite** : GitHub interdit d'approuver sa propre pull request. Si le tech lead utilise le même compte que l'auteur, il poste un commentaire qui porte le verdict.
+
+Exemples : « demande au techlead-back de cadrer et d'estimer bet-003 », « fais valider la PR 12 par le techlead-front ».
 
 ### /dev
 
