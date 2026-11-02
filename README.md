@@ -9,13 +9,13 @@ Ma bibliothèque d'extensions Claude Code (skills, agents, commandes, hooks, ser
 | `lelib-core` | skill `/ticket`, skill `hello-lelib`, agent `relecteur`, commande `/resume-session`, hook de journalisation des éditions (`~/.claude/lelib-edits.log`), serveur MCP `lelib-tools` (`ping`, `date_fr`) |
 | `lelib-equipe` | skills `/dev` et `/auto-test`, agents `po`, `dev-front`, `dev-back`, `qa`, `techlead-front`, `techlead-back`, `dba`, serveur MCP `playwright` (tests dans le navigateur, pour le `qa`) |
 | `lelib-angular` | skills `angular-setup` et `angular-ui`, vérification de compatibilité Angular / Node à l'ouverture de session |
-| `lelib-conception` | étape Conception du cycle de dev : skills `/api-contract` (OpenAPI), `/db-migration` (Liquibase) et `/adr`, script de contrôle des migrations |
+| `lelib-conception` | étape Conception du cycle de dev : skills `/api-contract` (OpenAPI), `/db-migration` (Liquibase), `/db-export` et `/adr`, script de contrôle des migrations |
 
 ### Conception (lelib-conception)
 
 **Standard de la marketplace : Liquibase est l'unique outil de schéma.** Pas de Flyway, et `spring.jpa.hibernate.ddl-auto` reste à `validate`. Les agents `dev-back`, `dba` et `techlead-back` appliquent cette règle (un changement de schéma sans changeset, ou une migration appliquée modifiée, bloque la pull request). À l'ouverture d'une session dans un projet Java, un hook de `lelib-conception` le vérifie sans réseau et n'affiche rien si tout va bien ; il avertit en cas de Flyway, de `ddl-auto=update` / `create` / `create-drop`, ou de projet JPA sans Liquibase. Il se lance aussi à la main : `node plugins/lelib-conception/scripts/check-db-tool.js [dossier]`.
 
-Trois skills pour l'étape Conception. Elles s'appuient sur les agents de `lelib-equipe` (`dba`, tech leads) quand il est installé, et appliquent sinon elles-mêmes les mêmes règles.
+Quatre skills pour l'étape Conception. Elles s'appuient sur les agents de `lelib-equipe` (`dba`, tech leads) quand il est installé, et appliquent sinon elles-mêmes les mêmes règles.
 
 #### /api-contract
 
@@ -44,6 +44,23 @@ Migrations **Liquibase** en SQL formaté, écrites avec l'agent `dba` :
 
 Le script `scripts/check-migrations.js` contrôle ces règles par rapport à la branche de base (`origin/main`, sinon `main`) : migration existante modifiée, renommée ou supprimée, nom invalide, rollback absent, horodatage trop ancien… Il se lance aussi à la main : `node plugins/lelib-conception/scripts/check-migrations.js [dossier] [--base <réf>] [--json]`.
 Projet sans Liquibase : la skill propose `spring-boot-starter-liquibase` et le passage de `ddl-auto` à `validate`, et **demande avant de modifier la configuration**. Liquibase 5.x est sous licence FSL-1.1-ALv2 (et non plus Apache 2).
+
+#### /db-export
+
+```
+/db-export             # schéma et données
+/db-export schema      # schéma seulement
+/db-export donnees     # données seulement
+```
+
+Exporte la base PostgreSQL du projet dans `db/database/export-AAAAMMJJ-HHMM/` à la racine du projet :
+- `schema.sql`, `donnees.sql` (la table `databasechangelog` de Liquibase est incluse) et un `LISEZMOI.md` (date, base, méthode, taille et SHA-256 de chaque fichier, lignes par table, commandes de restauration) ;
+- la connexion est lue dans `spring.datasource.*` ou dans le service PostgreSQL du `docker-compose.yml` ; l'export passe par le `pg_dump` du conteneur Docker si la base y tourne, sinon par un `pg_dump` local (`LELIB_PG_DUMP` indique son chemin s'il n'est pas dans le `PATH`) ;
+- une base H2 n'est pas prise en charge, et une **base distante est refusée** tant que l'utilisateur n'a pas donné son accord explicite ;
+- chaque fichier est vérifié, et si l'export échoue ou est incomplet, le dossier est supprimé : on ne garde jamais un export à moitié fait ;
+- le mot de passe n'est jamais affiché ni écrit.
+
+Ces fichiers contiennent les **données réelles** : ajoute `db/database/` au `.gitignore` du projet. Le script se lance aussi à la main : `node plugins/lelib-conception/scripts/db-export.js [dossier] [--schema | --donnees] [--dry-run]`.
 
 #### /adr
 

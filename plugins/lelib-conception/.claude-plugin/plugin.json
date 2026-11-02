@@ -1,7 +1,7 @@
 {
   "name": "lelib-conception",
-  "version": "0.2.0",
-  "description": "Étape Conception du cycle de dev : contrat d'API (OpenAPI) avec génération Java et Angular, migrations Liquibase, décisions d'architecture (ADR).",
+  "version": "0.3.0",
+  "description": "Étape Conception du cycle de dev : contrat d'API (OpenAPI) avec génération Java et Angular, migrations Liquibase, décisions d'architecture (ADR), export de la base de données.",
   "author": {
     "name": "Bilel Oueslati"
   }
