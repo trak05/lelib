@@ -1,0 +1,8 @@
+{
+  "name": "lelib-agent",
+  "version": "0.1.0",
+  "description": "Agent IA maison : un modèle Claude (API Anthropic) piloté par le harness des plugins lelib (agents et skills), lancé en ligne de commande ou en CI.",
+  "author": {
+    "name": "Bilel Oueslati"
+  }
+}
