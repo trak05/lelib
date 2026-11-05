@@ -52,7 +52,7 @@ Prérequis : l'outil `gh` doit être installé et connecté (`gh auth status`). 
    2. Sécurité : validation des entrées, injection, exposition de données, contrôle des droits.
    3. Données : transactions, requêtes N+1, chargements LAZY hors transaction, migrations.
    4. Conception : respect des couches, DTO, gestion des erreurs cohérente (`@ControllerAdvice`), et structure des packages par couche (`controller`, `service`, `repository`, `model`, `dto`, `enums`, `mapper`, `exception`, `config`) : toute classe rangée par fonctionnalité ou dans le mauvais package est à corriger.
-   5. Tests et TDD : les cas importants sont-ils couverts ? Chaque comportement ou correctif de la PR a-t-il son test (un test sans code de production qui l'exige, ou du code de production sans test, est **bloquant**) ? Les tests vérifient-ils le comportement plutôt que l'implémentation ?
+   5. Tests et TDD : les cas importants sont-ils couverts ? Chaque comportement ou correctif de la PR a-t-il son test (un test sans code de production qui l'exige, ou du code de production sans test, est **bloquant**) ? Les tests vérifient-ils le comportement plutôt que l'implémentation ? Chaque critère d'acceptation du ticket est-il cité par un test (`[<id> CA-n]`) ? Un critère sans test est **bloquant** (avec le plugin `lelib-tdd`, `check-criteres.js <ticket>` lancé dans le worktree de la PR le vérifie).
    6. **Règles de l'équipe**, telles que les applique le `dev-back` :
       - SOLID : logique métier dans un controller, classe qui fait plusieurs métiers, `new` d'un collaborateur dans un service, `switch` modifié au lieu d'être étendu.
       - Règles d'or : méthodes trop longues, duplication, valeurs magiques, `null` retourné, exception avalée, code commenté, `TODO` sans ticket.

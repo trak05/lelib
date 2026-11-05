@@ -1,0 +1,8 @@
+{
+  "name": "lelib-tdd",
+  "version": "0.1.0",
+  "description": "TDD vérifiable : journal des tests rouge / vert, garde sur le code de production, traçabilité des critères d'acceptation vers les tests, skill /tdd.",
+  "author": {
+    "name": "Bilel Oueslati"
+  }
+}

@@ -53,7 +53,7 @@ Prérequis : l'outil `gh` doit être installé et connecté (`gh auth status`). 
    2. Sécurité : pas de `innerHTML` non maîtrisé, pas de secret dans le front, droits vérifiés côté back.
    3. Performance : souscriptions non libérées, détection de changements, listes sans `track`.
    4. Conception : composants standalone, typage strict, logique hors des templates, Bootstrap pour la mise en page et PrimeNG pour les composants, cohérence avec l'existant.
-   5. Accessibilité, responsive, tests et TDD (chaque comportement ou correctif de la PR a son test ; du code de production sans test est **bloquant**) : un écran inutilisable sur mobile (défilement horizontal, cibles trop petites, tableau ou dialogue qui déborde, dépendance au survol, largeurs fixes en `px`) est **bloquant**.
+   5. Accessibilité, responsive, tests et TDD (chaque comportement ou correctif de la PR a son test ; du code de production sans test est **bloquant** ; chaque critère d'acceptation du ticket doit être cité par un test `[<id> CA-n]`, sinon **bloquant** — avec le plugin `lelib-tdd`, `check-criteres.js <ticket>` lancé dans le worktree de la PR le vérifie) : un écran inutilisable sur mobile (défilement horizontal, cibles trop petites, tableau ou dialogue qui déborde, dépendance au survol, largeurs fixes en `px`) est **bloquant**.
    6. **Règles de l'équipe**, telles que les applique le `dev-front` :
       - SOLID : composant qui mélange affichage, logique et appels HTTP, service instancié avec `new` au lieu d'être injecté, composant modifié par cas au lieu d'être composé.
       - Règles d'or : fonctions trop longues, duplication, valeurs magiques, `any`, `console.log` laissé, code commenté, `TODO` sans ticket, souscription non libérée.

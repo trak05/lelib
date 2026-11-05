@@ -8,8 +8,26 @@ Ma bibliothèque d'extensions Claude Code (skills, agents, commandes, hooks, ser
 |---|---|
 | `lelib-core` | skill `/ticket`, skill `hello-lelib`, agent `relecteur`, commande `/resume-session`, hook de journalisation des éditions (`~/.claude/lelib-edits.log`), serveur MCP `lelib-tools` (`ping`, `date_fr`) |
 | `lelib-equipe` | skills `/dev` et `/auto-test`, agents `po`, `dev-front`, `dev-back`, `qa`, `techlead-front`, `techlead-back`, `dba`, serveur MCP `playwright` (tests dans le navigateur, pour le `qa`) |
+| `lelib-tdd` | TDD vérifiable : skill `/tdd`, journal des tests rouge / vert (`tdd-run.js`), hook qui avertit quand du code de production est modifié sans test rouge, contrôle critères d'acceptation → tests (`check-criteres.js`) |
 | `lelib-angular` | skills `angular-setup` et `angular-ui`, vérification de compatibilité Angular / Node à l'ouverture de session |
 | `lelib-conception` | étape Conception du cycle de dev : skills `/api-contract` (OpenAPI), `/db-migration` (Liquibase), `/db-export` et `/adr`, script de contrôle des migrations |
+
+### TDD vérifiable (lelib-tdd)
+
+Les agents `dev-back` et `dev-front` travaillent en TDD (rouge, vert, refactor). Ce plugin rend ce travail **visible** au lieu de le croire sur parole :
+
+| Élément | Rôle |
+|---|---|
+| `tdd-run.js -- <commande de test>` | lance les tests et enregistre le résultat dans `.lelib/tdd/journal.jsonl` (à la racine du projet, ignoré par git) : rouge ou vert, tests en échec, cause du rouge (`assertion` = vrai rouge, `compilation` = classe absente, `inconnue` = commande en erreur, pas un rouge valide). Le code de sortie est celui des tests. |
+| `tdd-run.js --refactor` / `--bilan` / `--reset` | phase de refactor (refusée si les tests ne sont pas verts) ; résumé des cycles et alertes ; remise à zéro |
+| hook `PreToolUse` (`tdd-garde.js`) | avant de modifier du code de production (`src/main/java/**`, `src/app/**`), vérifie qu'un test rouge valide est enregistré (ou une phase refactor). **Il avertit** l'agent, il ne bloque pas. Tests, configuration et code généré passent toujours. |
+| `check-criteres.js [ticket]` | chaque critère d'acceptation `CA-n` du ticket doit être cité par un test (`[bet-003 CA-2] refuse un mot de passe vide`) ; code de sortie 1 s'il en manque |
+| skill `/tdd [ticket]` | la méthode complète : liste de tests dans le ticket, un cycle par test, bilan tiré du journal |
+
+- **Réglages** (variables d'environnement) : `LELIB_TDD=bloquer` refuse la modification au lieu d'avertir, `LELIB_TDD=off` désactive le hook, `LELIB_TDD_IGNORER=<motif>;<motif>` exclut des fichiers (expressions régulières), `LELIB_TDD_VALIDITE_H=8` règle la durée de validité du journal.
+- Le PO et `/ticket` numérotent désormais les critères (`CA-1 : …`). `/dev` vérifie le bilan et `check-criteres.js` avant de clôturer un ticket, et les tech leads refusent une PR dont un critère n'a pas de test.
+- **Limite** : le journal rend le TDD visible et contrôlable, il ne le garantit pas : un agent peut l'ignorer. Le hook avertit plutôt que de bloquer le temps de mesurer les faux positifs.
+- Tests du plugin : `node --test plugins/lelib-tdd/tests/*.test.js`.
 
 ### Conception (lelib-conception)
 
@@ -190,9 +208,10 @@ Pour l'installer sur n'importe quel poste, depuis un terminal `claude` :
 /plugin install lelib-equipe@lelib
 /plugin install lelib-angular@lelib
 /plugin install lelib-conception@lelib
+/plugin install lelib-tdd@lelib
 ```
 
-`lelib-core`, `lelib-equipe`, `lelib-angular` et `lelib-conception` s'installent indépendamment : n'installe que ceux dont tu as besoin.
+`lelib-core`, `lelib-equipe`, `lelib-angular`, `lelib-conception` et `lelib-tdd` s'installent indépendamment : n'installe que ceux dont tu as besoin.
 
 Ou, sans commande, dans `~/.claude/settings.json` (tous les projets) ou `.claude/settings.json` (un projet) :
 
@@ -205,7 +224,8 @@ Ou, sans commande, dans `~/.claude/settings.json` (tous les projets) ou `.claude
     "lelib-core@lelib": true,
     "lelib-equipe@lelib": true,
     "lelib-angular@lelib": true,
-    "lelib-conception@lelib": true
+    "lelib-conception@lelib": true,
+    "lelib-tdd@lelib": true
   }
 }
 ```

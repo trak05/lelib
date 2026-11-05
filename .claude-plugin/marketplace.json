@@ -23,6 +23,11 @@
       "description": "Étape Conception du cycle de dev : contrat d'API (OpenAPI) avec génération Java et Angular, migrations Liquibase, décisions d'architecture (ADR), export de la base de données."
     },
     {
+      "name": "lelib-tdd",
+      "source": "./plugins/lelib-tdd",
+      "description": "TDD vérifiable : journal des tests rouge / vert, garde sur le code de production, traçabilité des critères d'acceptation vers les tests, skill /tdd."
+    },
+    {
       "name": "lelib-angular",
       "source": "./plugins/lelib-angular",
       "description": "Angular avec Bootstrap (grille et flex) et PrimeNG : installation alignée sur les versions d'Angular et de Node du projet, et conventions d'interface."

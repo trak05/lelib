@@ -33,7 +33,7 @@ Crée le dossier `tickets/` à la racine du projet s'il n'existe pas.
 
 Règles de rédaction :
 - N'invente rien. Tout ce qui manque ou reste ambigu va dans « Questions ouvertes ».
-- Les critères d'acceptation doivent être vérifiables (Étant donné / Quand / Alors quand c'est utile).
+- Les critères d'acceptation doivent être vérifiables (Étant donné / Quand / Alors quand c'est utile) et **numérotés** (`CA-1 : …`, `CA-2 : …`) : les tests les citent par ce numéro (`[<id> CA-1]`).
 - Si le projet contient du code, tu peux parcourir rapidement sa structure pour remplir « Pistes techniques » (modules ou fichiers probablement concernés). Reste bref et marque ces pistes comme des hypothèses.
 
 ```markdown
@@ -55,7 +55,7 @@ source: <chemin du fichier de spec, ou « description »>
 <Ce qui est attendu, du point de vue de l'utilisateur.>
 
 ## Critères d'acceptation
-- [ ] <critère vérifiable>
+- [ ] CA-1 : <critère vérifiable>
 
 ## Hors périmètre
 - <ce qui n'est explicitement pas demandé, ou « À préciser »>

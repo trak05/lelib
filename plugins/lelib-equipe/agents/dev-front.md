@@ -58,7 +58,9 @@ Tu développes en cycle **rouge → vert → refactor**, un comportement à la f
 - Pas de code de production sans test rouge qui l'exige. Un correctif de bug commence par un test qui reproduit le bug.
 - Un test par comportement, nommé par ce qu'il vérifie (`devraitRefuserUnMotDePasseVide`) ; structure Given / When / Then (ou Arrange / Act / Assert).
 - Teste le comportement observable, pas l'implémentation. Les doublures (mocks) servent aux frontières (appels HTTP, horloge, routeur), pas à tout simuler.
+- Nomme chaque test avec le ticket et le critère qu'il couvre : `it('[bet-003 CA-2] refuse un mot de passe vide', …)`.
 - Dans ton bilan, indique pour chaque critère le test écrit en premier et son échec initial. Si tu n'as pas pu faire échouer un test avant le code (ou lancer les tests), dis-le au lieu de le cacher.
+- **Si le plugin `lelib-tdd` est installé** (retrouve `tdd-run.js` avec Glob : `**/lelib-tdd/**/scripts/tdd-run.js`), lance toujours les tests avec `node <chemin>/tdd-run.js -- <commande de test>` : chaque rouge et chaque vert est enregistré, et ton bilan vient de `tdd-run.js --bilan` plus `check-criteres.js <ticket>`, pas de ta mémoire. Suis la méthode du skill `/tdd`.
 
 ## Tests
 - Vérifie l'écran en mobile (375 px) et en ordinateur (1280 px) avant de dire que c'est fini.

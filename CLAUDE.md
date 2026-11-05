@@ -27,6 +27,7 @@ plugins/<nom>/
 ## Tester
 
 - Serveur MCP à la main : envoyer des lignes JSON-RPC sur stdin (`initialize`, `tools/list`, `tools/call`).
+- Tests automatiques des scripts : `node --test plugins/*/tests/*.test.js` (runner natif de Node, sans dépendance). Tout script de plugin qui porte de la logique doit avoir ses tests dans `plugins/<nom>/tests/`.
 - Hook à la main : `echo '{"tool_name":"Write","tool_input":{"file_path":"x"}}' | node hooks/scripts/<script>.js`
 - La marketplace est installée depuis GitHub (`trak05/lelib`) : une modification n'est visible qu'après `git push`, puis `/plugin marketplace update lelib` et redémarrage de la session.
 - Pour tester avant de pousser : `claude --plugin-dir ./plugins/<nom>` charge le plugin directement depuis le dossier.
