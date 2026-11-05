@@ -33,3 +33,7 @@ node "${CLAUDE_PLUGIN_ROOT}/bin/lelib-agent.js" [--agent <nom>] "<tâche>"
 ## 3. Rendre compte
 
 Reprends le bilan de l'agent tel quel, sans présenter comme fait ce qu'il n'a pas vérifié, puis lis les fichiers modifiés (`git status`, `git diff`) avant de dire que la tâche est réussie. Ne fais ni commit ni push.
+
+## Chat web
+
+Pour discuter avec l'agent dans un navigateur plutôt que de lancer une tâche unique, l'utilisateur lance `node "${CLAUDE_PLUGIN_ROOT}/bin/lelib-agent.js" --chat --projet <dossier>` dans son propre terminal (le serveur reste actif ; ne le lance pas toi-même en arrière-plan sans qu'il le demande). L'adresse avec le jeton s'affiche au lancement.

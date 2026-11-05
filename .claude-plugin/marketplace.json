@@ -25,7 +25,7 @@
     {
       "name": "lelib-agent",
       "source": "./plugins/lelib-agent",
-      "description": "Agent IA maison : un modèle Claude (API Anthropic) piloté par le harness des plugins lelib (agents et skills), en ligne de commande ou en CI."
+      "description": "Agent IA maison : un modèle Claude (API Anthropic) piloté par le harness des plugins lelib (agents et skills), en ligne de commande, en CI, ou depuis un chat web local."
     },
     {
       "name": "lelib-angular",

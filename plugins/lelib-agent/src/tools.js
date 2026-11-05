@@ -203,8 +203,11 @@ async function executer(contexte, nom, entree) {
   if (!executeur) return { texte: `Outil inconnu : ${nom}`, erreur: true };
   try {
     if (OUTILS_ECRITURE.has(nom) && !contexte.yes) {
-      const ok = await confirmer(`Autoriser ${description(nom, entree)} ?`);
-      if (!ok) return { texte: "Refusé : cette action demande une confirmation. Relance avec --yes pour l'autoriser sans terminal interactif.", erreur: true };
+      const ok = await (contexte.confirmer || confirmer)(`Autoriser ${description(nom, entree)} ?`);
+      if (!ok) {
+        const raison = contexte.confirmer ? "l'utilisateur n'a pas autorisé cette action" : "cette action demande une confirmation (relance avec --yes pour l'autoriser sans terminal interactif)";
+        return { texte: `Refusé : ${raison}.`, erreur: true };
+      }
     }
     return { texte: String(await executeur(contexte, entree)), erreur: false };
   } catch (e) {
