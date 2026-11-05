@@ -157,7 +157,7 @@ Exemples : « demande au techlead-back de cadrer et d'estimer bet-003 », « fai
 
 ### /dev
 
-Développe des tickets avec les agents, puis range ceux qui sont terminés dans `tickets/done/` :
+Développe des tickets avec les agents, sur une branche par ticket, puis range ceux qui sont terminés dans `tickets/done/` :
 
 ```
 /dev 3        # le ticket numéro 3 (003 ou bet-003 marchent aussi)
@@ -166,6 +166,16 @@ Développe des tickets avec les agents, puis range ceux qui sont terminés dans 
 
 Pour chaque ticket : `dba` si le schéma change, puis `dev-back`, puis `dev-front`. Le ticket n'est déplacé dans `done/` (statut `terminé`, critères cochés) que si les tests passent.
 En cas d'échec, le ticket reste dans `tickets/` avec une section `## Blocage` et `/dev` s'arrête, car les tickets suivants peuvent en dépendre. Un ticket dont les questions ouvertes bloquent le développement est sauté (sans argument) ou fait poser la question (avec un numéro). `/dev` ne fait jamais de commit.
+
+**Une branche par ticket** : avant de coder, `/dev` crée `feature-bet-007` (ou `fix-bet-007` pour un ticket de type `anomalie`) à partir d'un `develop` à jour, puis commit et pousse cette branche quand le ticket est terminé. Tout le git est fait par `scripts/branche-dev.js` (testé sur de vrais dépôts : `node --test plugins/lelib-equipe/tests/*.test.js`) :
+
+- **Avant de coder** : arbre propre exigé, `git fetch`, `git checkout develop`, `git pull --ff-only origin develop`, `git checkout -b feature-bet-007`. Une branche déjà existante (ticket bloqué repris) est reprise telle quelle, sans y fusionner `develop`.
+- **Projets à plusieurs dépôts** (back et front séparés, comme `beta`) : une branche dans chaque dépôt concerné par le ticket, et rien n'est modifié tant qu'ils ne sont pas tous propres.
+- **À la clôture** : commit ciblé (les changements du ticket et son fichier, jamais les autres brouillons de `tickets/` ni vos fichiers non suivis d'avant), message `feature(bet-007): <titre>`, puis `git push -u origin feature-bet-007`. Les branches sont poussées, **pas fusionnées** : la revue et la fusion dans `develop` restent à vous.
+- **Refus et arrêts, sans rien contourner** : arbre non propre (la liste des fichiers est donnée, rien n'est caché ni écarté), `develop` introuvable (pas de repli sur `main` ; `--base` pour une autre base), pull non fast-forward, fetch ou push impossible, hook de commit qui refuse. `/dev` s'arrête alors sans passer au ticket suivant.
+- **Jamais** : de commit ou push sur `develop`, `main` ou `master`, de force-push, de `--no-verify`, de `merge`, `rebase`, `reset` ni `stash`.
+- Un ticket **bloqué** n'est ni commité ni poussé : le travail reste sur sa branche.
+- Chaque ticket repart de `develop` : la branche d'un ticket ne contient pas le travail du précédent. Si des tickets dépendent les uns des autres, fusionnez-les dans l'ordre.
 
 On appelle les agents en langage naturel : « demande au techlead-back de relire ce controller », « fais vérifier bet-001 par le qa ».
 
