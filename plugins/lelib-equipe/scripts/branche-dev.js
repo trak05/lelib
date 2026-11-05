@@ -83,9 +83,13 @@ function trouverTicket(racine, cible, { aussiTermines }) {
 }
 
 function infosTicket(fichier) {
-  const entete = lireEntete(fs.readFileSync(fichier, "utf8"));
-  const id = (entete.id || (/^([A-Za-z]+-\d+)/.exec(path.basename(fichier)) || [])[1] || "").toLowerCase();
-  if (!/^[a-z0-9]+-\d+$/.test(id)) return { erreur: `identifiant de ticket introuvable ou invalide dans ${path.basename(fichier)} (ligne \`id:\`).` };
+  return infosTicketTexte(fs.readFileSync(fichier, "utf8"), path.basename(fichier));
+}
+
+function infosTicketTexte(texte, nomFichier) {
+  const entete = lireEntete(texte);
+  const id = (entete.id || (/^([A-Za-z]+-\d+)/.exec(nomFichier) || [])[1] || "").toLowerCase();
+  if (!/^[a-z0-9]+-\d+$/.test(id)) return { erreur: `identifiant de ticket introuvable ou invalide dans ${nomFichier} (ligne \`id:\`).` };
   const prefixe = sansAccent(entete.type) === "anomalie" ? "fix" : "feature";
   return { id, titre: entete.titre || id, type: entete.type || null, prefixe, branche: `${prefixe}-${id}` };
 }
@@ -313,4 +317,4 @@ function main(argv) {
 if (require.main === module) {
   try { process.exit(main(process.argv.slice(2))); } catch (e) { console.error(`Erreur : ${e.message}`); process.exit(2); }
 }
-module.exports = { trouverDepots, infosTicket };
+module.exports = { git, existe, racineTickets, trouverDepots, trouverTicket, infosTicket, infosTicketTexte, choisirDepots, lireEntete, etatArbre, ticketsRelatif, BASE_DEFAUT };

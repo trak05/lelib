@@ -7,7 +7,7 @@ Ma bibliothèque d'extensions Claude Code (skills, agents, commandes, hooks, ser
 | Plugin | Contenu |
 |---|---|
 | `lelib-core` | skills `/ticket` et `/jira` (brouillon → ticket Jira), skill `hello-lelib`, agent `relecteur`, commande `/resume-session`, hook de journalisation des éditions (`~/.claude/lelib-edits.log`), serveur MCP `lelib-tools` (`ping`, `date_fr`) |
-| `lelib-equipe` | skills `/dev` et `/auto-test`, agents `po`, `dev-front`, `dev-back`, `qa`, `techlead-front`, `techlead-back`, `dba`, serveur MCP `playwright` (tests dans le navigateur, pour le `qa`) |
+| `lelib-equipe` | skills `/dev`, `/pr` et `/auto-test`, agents `po`, `dev-front`, `dev-back`, `qa`, `techlead-front`, `techlead-back`, `dba`, serveur MCP `playwright` (tests dans le navigateur, pour le `qa`) |
 | `lelib-tdd` | TDD vérifiable : skill `/tdd`, journal des tests rouge / vert (`tdd-run.js`), hook qui avertit quand du code de production est modifié sans test rouge, contrôle critères d'acceptation → tests (`check-criteres.js`) |
 | `lelib-angular` | skills `angular-setup` et `angular-ui`, vérification de compatibilité Angular / Node à l'ouverture de session |
 | `lelib-conception` | étape Conception du cycle de dev : skills `/api-contract` (OpenAPI), `/db-migration` (Liquibase), `/db-export` et `/adr`, script de contrôle des migrations |
@@ -178,6 +178,25 @@ En cas d'échec, le ticket reste dans `tickets/` avec une section `## Blocage` e
 - Chaque ticket repart de `develop` : la branche d'un ticket ne contient pas le travail du précédent. Si des tickets dépendent les uns des autres, fusionnez-les dans l'ordre.
 
 On appelle les agents en langage naturel : « demande au techlead-back de relire ce controller », « fais vérifier bet-001 par le qa ».
+
+### /pr
+
+Crée sur GitHub la pull request d'un ticket, de sa branche (`feature-bet-007` ou `fix-bet-007`, créée par `/dev`) vers `develop` :
+
+```
+/pr bet-007                   contrôles, aperçu, confirmation, puis création
+/pr bet-007 --brouillon       PR en brouillon (draft)
+/pr bet-007 --dry-run         contrôles et aperçu seulement, rien n'est créé
+/pr bet-007 --oui             crée sans demander de confirmation (CI)
+```
+
+- **Prérequis** : la CLI GitHub (`gh`) installée et connectée. Le skill ne demande ni n'écrit jamais de jeton : tu lances toi-même `gh auth login`. Le dépôt doit être sur GitHub.
+- **Contrôles avant création** (rien n'est créé si un seul échoue, y compris sur un projet à deux dépôts) : la branche existe et est **poussée** sans commit local en retard, elle a au moins un commit par rapport à `develop`, aucune PR n'est déjà ouverte pour elle (pas de doublon), le ticket n'a pas de section « Blocage ».
+- **Contenu de la PR** : titre `feature(bet-007): <titre>` (ou `fix(…)`), corps tiré du ticket : identifiant, lien Jira (`/jira`), type, estimation, besoin, critères d'acceptation, résumé du journal TDD s'il existe (`lelib-tdd`), et une consigne de revue. Le ticket est relu dans sa branche si tu es revenu sur `develop`.
+- **Projets à deux dépôts** (back, front) : une PR par dépôt où le ticket a une branche, chacune mentionnant l'autre.
+- **Garde-fous** : le script ne pousse rien, ne fusionne rien, ne modifie ni le ticket ni une PR existante, et lance `gh` sans passer par un shell (titres avec guillemets ou `$(…)` transmis tels quels). L'URL de la PR est rendue en JSON et se retrouve avec `gh pr list` (elle n'est pas écrite dans le ticket, déjà commité sur la branche).
+- La logique est dans `scripts/pr-prepare.js`, testé avec de vrais dépôts git et un faux `gh` : `node --test plugins/lelib-equipe/tests/*.test.js`. L'appel réel à GitHub n'est pas testé : à essayer d'abord avec `--dry-run`, puis `--brouillon`.
+- Suite du flux : `/ticket` → estimation → `/jira` → `/dev` → `/pr` → relecture par le tech lead (« demande au techlead-back de relire la PR 12 »).
 
 ### /auto-test
 
