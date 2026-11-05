@@ -6,7 +6,7 @@ Ma bibliothèque d'extensions Claude Code (skills, agents, commandes, hooks, ser
 
 | Plugin | Contenu |
 |---|---|
-| `lelib-core` | skill `/ticket`, skill `hello-lelib`, agent `relecteur`, commande `/resume-session`, hook de journalisation des éditions (`~/.claude/lelib-edits.log`), serveur MCP `lelib-tools` (`ping`, `date_fr`) |
+| `lelib-core` | skills `/ticket` et `/jira` (brouillon → ticket Jira), skill `hello-lelib`, agent `relecteur`, commande `/resume-session`, hook de journalisation des éditions (`~/.claude/lelib-edits.log`), serveur MCP `lelib-tools` (`ping`, `date_fr`) |
 | `lelib-equipe` | skills `/dev` et `/auto-test`, agents `po`, `dev-front`, `dev-back`, `qa`, `techlead-front`, `techlead-back`, `dba`, serveur MCP `playwright` (tests dans le navigateur, pour le `qa`) |
 | `lelib-tdd` | TDD vérifiable : skill `/tdd`, journal des tests rouge / vert (`tdd-run.js`), hook qui avertit quand du code de production est modifié sans test rouge, contrôle critères d'acceptation → tests (`check-criteres.js`) |
 | `lelib-angular` | skills `angular-setup` et `angular-ui`, vérification de compatibilité Angular / Node à l'ouverture de session |
@@ -196,6 +196,23 @@ Crée un ticket brouillon dans le dossier `tickets/` du projet :
 
 Le ticket est nommé `<3 premières lettres du projet>-<numéro>`, par exemple `tickets/opa-001.md` pour le projet `opamt`.
 La numérotation repart du plus grand numéro existant, sans jamais en réutiliser un.
+
+### /jira
+
+Crée dans Jira le ticket correspondant à un brouillon de `tickets/`, dans la première colonne du tableau (le premier statut du workflow, généralement « To Do ») :
+
+```
+/jira bet-001                 priorité Medium par défaut
+/jira bet-001 haute           Highest, High, Medium, Low, Lowest (ou critique, haute, moyenne, basse, très basse)
+/jira bet-001 --dry-run       prépare et montre, sans rien créer (premier essai conseillé)
+/jira bet-001 --oui           crée sans demander de confirmation (CI)
+```
+
+- **Prérequis** : le connecteur **Atlassian** (Jira Cloud) connecté dans Claude. Le skill découvre ses outils à l'exécution et s'arrête avec un message clair s'il est absent. Aucun jeton n'est demandé ni stocké.
+- **Brouillon chiffré obligatoire** : les points viennent des tech leads (`points_back`, `points_front`, échelle Fibonacci 1, 2, 3, 5, 8, 13). Le skill additionne les deux côtés et arrondit au Fibonacci supérieur (3 + 5 → 8, 5 + 5 → 13). Un brouillon non chiffré, ou dont la somme dépasse 13, est refusé : on ne devine pas l'estimation.
+- **Contenu du ticket** : titre, type (fonctionnalité → Story, anomalie → Bug, technique → Task, noms français reconnus), priorité, étiquette `lelib-<id>`, description (contexte, besoin, critères `CA-n`, hors périmètre, pistes, questions ouvertes, détail de l'estimation) et points dans le champ d'estimation s'il existe.
+- **Garde-fous** : aperçu puis confirmation avant la création ; aucun doublon (en-tête du brouillon et recherche dans Jira) ; aucune transition ni assignation ; le statut obtenu est relu et signalé. La clé obtenue est écrite dans l'en-tête du brouillon (`jira`, `jira_url`, `jira_cree_le`). Le projet Jira choisi est mémorisé dans `tickets/.jira.json` (sans secret).
+- La logique (points, priorité, description, retour dans le brouillon) est dans `scripts/jira-prepare.js`, testé par `node --test plugins/lelib-core/tests/*.test.js`. L'appel à Jira lui-même n'est pas testable sans instance : à essayer d'abord avec `--dry-run`.
 
 ## Utilisation
 
