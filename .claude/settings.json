@@ -9,7 +9,6 @@
   },
   "enabledPlugins": {
     "lelib-core@lelib": true,
-    "lelib-equipe@lelib": true,
-    "lelib-agent@lelib": true
+    "lelib-equipe@lelib": true
   }
 }

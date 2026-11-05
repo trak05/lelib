@@ -8,35 +8,8 @@ Ma bibliothèque d'extensions Claude Code (skills, agents, commandes, hooks, ser
 |---|---|
 | `lelib-core` | skill `/ticket`, skill `hello-lelib`, agent `relecteur`, commande `/resume-session`, hook de journalisation des éditions (`~/.claude/lelib-edits.log`), serveur MCP `lelib-tools` (`ping`, `date_fr`) |
 | `lelib-equipe` | skills `/dev` et `/auto-test`, agents `po`, `dev-front`, `dev-back`, `qa`, `techlead-front`, `techlead-back`, `dba`, serveur MCP `playwright` (tests dans le navigateur, pour le `qa`) |
-| `lelib-agent` | agent IA maison en ligne de commande (`bin/lelib-agent.js`) : modèle Claude via l'API Anthropic + harness (agents et skills des autres plugins), skill `/agent` |
 | `lelib-angular` | skills `angular-setup` et `angular-ui`, vérification de compatibilité Angular / Node à l'ouverture de session |
 | `lelib-conception` | étape Conception du cycle de dev : skills `/api-contract` (OpenAPI), `/db-migration` (Liquibase), `/db-export` et `/adr`, script de contrôle des migrations |
-
-### Agent IA maison (lelib-agent)
-
-Un agent = **un modèle LLM + un harness**. Ici : le modèle est Claude (API Anthropic), le harness est celui que tu as déjà écrit, c'est-à-dire les **agents** (`agents/*.md` : rôle et outils autorisés) et les **skills** (`skills/*/SKILL.md`) des plugins lelib. Le CLI les découvre tout seul (plugins voisins, cache de Claude Code, `.claude/` du projet, dossiers de `LELIB_HARNESS_DIRS`). Aucune dépendance npm : un simple `node` suffit, donc il tourne tel quel en CI.
-
-```bash
-export ANTHROPIC_API_KEY=...            # jamais dans un fichier du dépôt
-node plugins/lelib-agent/bin/lelib-agent.js --liste                      # agents et skills trouvés
-node plugins/lelib-agent/bin/lelib-agent.js --agent po --dry-run         # prompt et outils, sans appel API
-node plugins/lelib-agent/bin/lelib-agent.js --agent dev-back "Implémente tickets/bet-003.md"
-```
-
-- **Boucle** : message → le modèle demande des outils (`read_file`, `list_files`, `search`, `write_file`, `edit_file`, `run_command`) → résultats → … → bilan final. Les skills se chargent à la demande (`load_skill`) et `delegate` confie une sous-tâche à un autre agent (profondeur 2 au maximum) : c'est la base d'un orchestrateur CI.
-- **Sécurité** : les fichiers sont confinés au dossier courant ; écritures et commandes demandent confirmation. Sans terminal interactif (CI), elles sont refusées sauf avec `--yes`. Limite de 30 tours (`--max-tours`).
-- **Options** : `--agent`, `--model` (défaut `claude-sonnet-5-5`), `--max-tours`, `--yes`, `--liste`, `--dry-run`. Code de sortie : 0 terminé, 1 erreur, 2 limite atteinte.
-- **Chat web local** (comme Claude : tu poses une question, il répond au fil de l'eau, avec les outils sur tes projets) :
-
-  ```bash
-  node plugins/lelib-agent/bin/lelib-agent.js --chat --projet <dossier> [--projet <autre>] [--port 3000]
-  ```
-
-  Le terminal affiche une adresse `http://localhost:3000/?t=<jeton>` : ouvre-la dans ton navigateur. La page propose la liste des conversations (reprise, suppression), le choix du projet et de l'agent à la création d'une conversation, la réponse en streaming avec rendu Markdown, les appels d'outils repliables et un bouton Arrêter. Elle est utilisable sur mobile. Les écritures de fichiers et les commandes shell affichent une carte **Autoriser / Autoriser pour cette conversation / Refuser** ; sans réponse en 5 minutes, ou si la page est fermée, c'est refusé. Sans `--projet`, c'est `LELIB_PROJETS`, sinon le dossier courant.
-  - **Sécurité** : le serveur n'écoute que sur `127.0.0.1` ; l'adresse contient un jeton aléatoire propre à chaque lancement, exigé par toutes les requêtes de l'API ; l'hôte et l'origine sont vérifiés. Il est fait pour toi seul : ne l'expose pas sur un réseau (un agent qui lit, écrit et lance des commandes n'a pas sa place derrière un accès partagé sans authentification ni isolation).
-  - **Conversations** : enregistrées dans `~/.lelib-agent/conversations/` (`LELIB_AGENT_DATA` pour changer), hors du dépôt. Elles contiennent le contenu des fichiers que l'agent a lus : traite-les comme des données du projet. Un tour interrompu ou en erreur n'est pas enregistré.
-- Les outils `mcp__…` déclarés par un agent (le Playwright du `qa`) ne sont pas disponibles dans ce CLI : il les ignore et le signale.
-- Derrière un proxy d'entreprise : `HTTPS_PROXY` est pris en compte.
 
 ### Conception (lelib-conception)
 
@@ -217,10 +190,9 @@ Pour l'installer sur n'importe quel poste, depuis un terminal `claude` :
 /plugin install lelib-equipe@lelib
 /plugin install lelib-angular@lelib
 /plugin install lelib-conception@lelib
-/plugin install lelib-agent@lelib
 ```
 
-`lelib-core`, `lelib-equipe`, `lelib-angular`, `lelib-conception` et `lelib-agent` s'installent indépendamment : n'installe que ceux dont tu as besoin.
+`lelib-core`, `lelib-equipe`, `lelib-angular` et `lelib-conception` s'installent indépendamment : n'installe que ceux dont tu as besoin.
 
 Ou, sans commande, dans `~/.claude/settings.json` (tous les projets) ou `.claude/settings.json` (un projet) :
 
@@ -233,8 +205,7 @@ Ou, sans commande, dans `~/.claude/settings.json` (tous les projets) ou `.claude
     "lelib-core@lelib": true,
     "lelib-equipe@lelib": true,
     "lelib-angular@lelib": true,
-    "lelib-conception@lelib": true,
-    "lelib-agent@lelib": true
+    "lelib-conception@lelib": true
   }
 }
 ```
